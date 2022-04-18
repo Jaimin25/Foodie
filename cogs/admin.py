@@ -13,7 +13,7 @@ import json
 import html
 import psutil
 
-from discord.ui import Button, View
+from discord.ui import Button, View, Select
 
 class PersistentView(discord.ui.View):
     def __init__(self):
@@ -44,7 +44,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         bedem.add_field(name='CPU Usage', value=f'{psutil.cpu_percent()}%', inline=False)
         bedem.add_field(name='Memory Usage', value=f'{psutil.virtual_memory().percent}%', inline=False)
         bedem.add_field(name='Available Memory',
-                        value=f'{psutil.virtual_memory().available * 100 / psutil.virtual_memory().total}%',
+                        value=f'{round(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total, 2)}%',
                         inline=False)
         await ctx.send(embed=bedem)
 
@@ -89,6 +89,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     @commands.is_owner()
     @commands.group(name="sql")
     async def sql(self, ctx, *, command):
+
         res = await self.client.db.fetch(command)
         if len(res) == 0:
             return await ctx.send(
@@ -101,7 +102,12 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
             table.add_row(lst)
 
         msg = table.get_string()
-        await ctx.send(f"```sql\n{msg}\n```")
+
+        with open("cogs/dt.sql", "w") as n:
+
+            n.write(msg)
+
+        await ctx.send(file=discord.File("cogs/dt.sql"))
 
     @commands.is_owner()
     @commands.command(aliases=["tsks"])

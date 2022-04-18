@@ -11,8 +11,8 @@ import random
 import datetime
 import pytz
 import traceback
-from discord import app_commands
 from cogs import admin
+import jishaku
 
 class MyBot(commands.Bot):
     def __init__(self):
@@ -20,7 +20,8 @@ class MyBot(commands.Bot):
         intents.message_content = True
         super().__init__(command_prefix='f', self_bot=True, intents=intents, strip_after_prefix=True)
         self.initial_extensions = [
-            'cogs.admin'
+            'cogs.admin',
+            'jishaku'
         ]
 
     async def setup_hook(self):
@@ -63,6 +64,17 @@ class MyBot(commands.Bot):
 
 
 client = MyBot()
+
+@client.event
+async def on_guild_join(guild):
+    timestamp = datetime.datetime.now()
+    await client.get_channel(965112419305291786).send(f"**Joined** server **{guild.name}** at **{timestamp.strftime(r'%d %B, %Y  %I:%M %p')}**")
+
+@client.event
+async def on_guild_remove(guild):
+    timestamp = datetime.datetime.now()
+    await client.get_channel(965112419305291786).send(f"**Left** server **{guild.name}** at **{timestamp.strftime(r'%d %B, %Y  %I:%M %p')}**")
+
 
 @client.tree.command(description="Help")
 async def help(interaction: discord.Interaction) -> None:
