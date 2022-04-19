@@ -11,7 +11,7 @@ import random
 import datetime
 import pytz
 import traceback
-from cogs import admin
+from cogs import admin, play
 import jishaku
 
 class MyBot(commands.Bot):
@@ -21,6 +21,7 @@ class MyBot(commands.Bot):
         super().__init__(command_prefix='f', self_bot=True, intents=intents, strip_after_prefix=True)
         self.initial_extensions = [
             'cogs.admin',
+            'cogs.play',
             'jishaku'
         ]
 
@@ -32,6 +33,9 @@ class MyBot(commands.Bot):
         self.add_view(admin.PersistentView())
 
     async def on_message(self, message):
+        if message.content == "sync":
+            await self.tree.sync(guild=discord.Object(955385300513878026))
+            print("synced")
 
         if message.guild is None:
             return
@@ -59,7 +63,7 @@ class MyBot(commands.Bot):
         print('Running background task...')
 
     async def on_ready(self):
-        await self.tree.sync(guild=discord.Object(955385300513878026))
+
         print('Ready!')
 
 
@@ -74,7 +78,6 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     timestamp = datetime.datetime.now()
     await client.get_channel(965112419305291786).send(f"**Left** server **{guild.name}** at **{timestamp.strftime(r'%d %B, %Y  %I:%M %p')}**")
-
 
 @client.tree.command(description="Help")
 async def help(interaction: discord.Interaction) -> None:
