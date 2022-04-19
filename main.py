@@ -1,6 +1,7 @@
 import discord
 from discord.ui import Button, View
 from discord.ext import commands, tasks
+from discord import app_commands
 import aiohttp
 import config
 import asyncpg
@@ -11,7 +12,7 @@ import random
 import datetime
 import pytz
 import traceback
-from cogs import admin, play
+from cogs import PersistentView
 import jishaku
 
 class MyBot(commands.Bot):
@@ -30,7 +31,7 @@ class MyBot(commands.Bot):
         self.session = aiohttp.ClientSession()
         for ext in self.initial_extensions:
             await self.load_extension(ext)
-        self.add_view(admin.PersistentView())
+        self.add_view(PersistentView.PlayPersistentView())
 
     async def on_message(self, message):
         if message.content == "sync":
@@ -79,11 +80,10 @@ async def on_guild_remove(guild):
     timestamp = datetime.datetime.now()
     await client.get_channel(965112419305291786).send(f"**Left** server **{guild.name}** at **{timestamp.strftime(r'%d %B, %Y  %I:%M %p')}**")
 
-@client.tree.command(description="Help")
+@app_commands.command(description="Help")
+@app_commands.guilds(discord.Object(id=955385300513878026))
 async def help(interaction: discord.Interaction) -> None:
     await interaction.response.send_message("Hello from my command!")
-
-client.tree.add_command(help, guild=discord.Object(955385300513878026))
 
 @client.command(hidden=True)
 @commands.is_owner()

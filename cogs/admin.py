@@ -15,22 +15,6 @@ import psutil
 
 from discord.ui import Button, View, Select
 
-class PersistentView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @discord.ui.button(label='Green', style=discord.ButtonStyle.green, custom_id='persistent_view:green')
-    async def green(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await Admin.green(self, interaction)
-
-    @discord.ui.button(label='Red', style=discord.ButtonStyle.red, custom_id='persistent_view:red')
-    async def red(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message('This is red.', ephemeral=True)
-
-    @discord.ui.button(label='Grey', style=discord.ButtonStyle.grey, custom_id='persistent_view:grey')
-    async def grey(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message('This is grey.', ephemeral=True)
-
 class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     def __init__(self, client):
         self.client = client
@@ -54,7 +38,6 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f"{round(self.client.latency * 1000)}ms")
-        await ctx.send("What's your favourite colour?", view=PersistentView())
 
     @commands.command()
     async def support(self, ctx):
