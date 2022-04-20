@@ -23,6 +23,8 @@ class MyBot(commands.Bot):
         self.initial_extensions = [
             'cogs.admin',
             'cogs.play',
+            'cogs.profile',
+            'cogs.upgrades',
             'jishaku'
         ]
 
@@ -32,6 +34,8 @@ class MyBot(commands.Bot):
         for ext in self.initial_extensions:
             await self.load_extension(ext)
         self.add_view(PersistentView.PlayPersistentView())
+        self.add_view(PersistentView.ProfilePersistentView())
+        self.add_view(PersistentView.UpgradesPersistentView())
 
     async def on_message(self, message):
         if message.content == "sync":
