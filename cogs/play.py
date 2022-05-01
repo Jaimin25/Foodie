@@ -55,7 +55,6 @@ class Play(commands.Cog):
     async def serve(self, interaction) -> None:
 
         play_embed = discord.Embed(title=f"{interaction.user.name}", color=0xfee3a8)
-        play_embed.set_thumbnail(url=interaction.client.user.avatar)
         play_embed.set_footer(text="test",icon_url=interaction.user.avatar)
 
         details = await profile.Profile.get_user_details(self, interaction)
@@ -68,7 +67,7 @@ class Play(commands.Cog):
 
         money = round(float(f1)*(4.00*buff)+float(f2)*(3.00*buff)+float(f3)*(2.00*buff))
 
-        play_embed.add_field(name="__Food Served:__",
+        play_embed.add_field(name=f"__Food Served:__",
                              value=f"Hamburger 🍔 x**{f1}** \nFries 🍟  x**{f2}** \n Drinks <:drink:964935572869222430> x**{f3}** \n Exp: **{xp}** xp\n Money: **${money}**", inline=False)
 
         account = await profile.Profile.check_for_account(self, interaction)
