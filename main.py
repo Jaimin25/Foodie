@@ -36,6 +36,7 @@ class MyBot(commands.Bot):
         self.add_view(PersistentView.PlayPersistentView())
         self.add_view(PersistentView.ProfilePersistentView())
         self.add_view(PersistentView.UpgradesPersistentView())
+        self.add_view(PersistentView.StartPersistentView())
 
     async def on_message(self, message):
         if message.content == "sync":
@@ -71,7 +72,6 @@ class MyBot(commands.Bot):
 
         print('Ready!')
 
-
 client = MyBot()
 
 @client.event
@@ -84,19 +84,14 @@ async def on_guild_remove(guild):
     timestamp = datetime.datetime.now()
     await client.get_channel(965112419305291786).send(f"**Left** server **{guild.name}** at **{timestamp.strftime(r'%d %B, %Y  %I:%M %p')}**")
 
-@app_commands.command(description="Help")
-@app_commands.guilds(discord.Object(id=955385300513878026))
-async def help(interaction: discord.Interaction) -> None:
-    await interaction.response.send_message("Hello from my command!")
-
 @client.command(hidden=True)
 @commands.is_owner()
 async def shutdown(ctx):
     await ctx.send("Turning myself off...")
     await client.close()
 
-local_tz = pytz.timezone('Asia/Kolkata')
 
+local_tz = pytz.timezone('Asia/Kolkata')
 
 def utc_to_local(utc_dt):
     local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)
