@@ -3,27 +3,27 @@
     "stove": {
       "cost": "2500",
       "buff": "0.01",
-      "max_upgrades": "15"
+      "max_upgrades": "20"
     },
     "oven": {
       "cost": "2000",
       "buff": "0.015",
-      "max_upgrades": "20"
+      "max_upgrades": "25"
     },
     "microwave": {
       "cost": "2000",
       "buff": "0.015",
-      "max_upgrades": "20"
+      "max_upgrades": "25"
     },
-    "dishawasher": {
+    "dishwasher": {
       "cost": "1500",
       "buff": "0.01",
-      "max_upgrades": "15"
+      "max_upgrades": "20"
     },
     "utensils": {
       "cost": "1000",
       "buff": "0.001",
-      "max_upgrades": "25"
+      "max_upgrades": "30"
     }
   },
   "staff": {
@@ -55,6 +55,33 @@
     "receptionist": {
       "cost": "4000",
       "buff": "0.005",
+      "max_upgrades": "5"
+    }
+  },
+  "farm": {
+    "farmland": {
+      "cost": "2000",
+      "buff": "0.25",
+      "max_upgrades": "8"
+    },
+    "machines": {
+      "cost": "1500",
+      "buff": "0.1",
+      "max_upgrades": "10"
+    },
+    "storage": {
+      "cost": "1000",
+      "buff": "500",
+      "max_upgrades": "20"
+    },
+    "fertilizer": {
+      "cost": "500",
+      "buff": "0.05",
+      "max_upgrades": "40"
+    },
+    "seed": {
+      "cost": "2000",
+      "buff": "0.2",
       "max_upgrades": "5"
     }
   }

@@ -56,20 +56,6 @@ class Play(commands.Cog):
 
         play_embed = discord.Embed(title=f"{interaction.user.name}", color=0xfee3a8)
         play_embed.set_footer(text="test",icon_url=interaction.user.avatar)
-
-        details = await profile.Profile.get_user_details(self, interaction)
-        buff = float(details[9])
-
-        f1 = round((random.randint(5, 20)) * buff)
-        f2 = round((random.randint(5, 20)) * buff)
-        f3 = round((random.randint(5, 15)) * buff)
-        xp = round((random.randint(5, 50)) * buff)
-
-        money = round(float(f1)*(4.00*buff)+float(f2)*(3.00*buff)+float(f3)*(2.00*buff))
-
-        play_embed.add_field(name=f"__Food Served:__",
-                             value=f"Hamburger 🍔 x**{f1}** \nFries 🍟  x**{f2}** \n Drinks <:drink:964935572869222430> x**{f3}** \n Exp: **{xp}** xp\n Money: **${money}**", inline=False)
-
         account = await profile.Profile.check_for_account(self, interaction)
 
         if account[0] is False:
@@ -78,6 +64,23 @@ class Play(commands.Cog):
 
             await interaction.response.send_message(embed=em, view=v)
         elif account[0] is True:
+
+            details = await profile.Profile.get_user_details(self, interaction)
+            buff = float(details[9])
+            min_food = 5 * details[5]
+            max_food = 10 * details[5]
+
+            f1 = round((random.randint(min_food, max_food)) * buff)
+            f2 = round((random.randint(min_food, max_food)) * buff)
+            f3 = round((random.randint(min_food, max_food)) * buff)
+            xp = round((random.randint(20, 50)) * buff)
+
+            money = round(float(f1) * (4.00 * buff) + float(f2) * (3.00 * buff) + float(f3) * (2.00 * buff))
+
+            play_embed.add_field(name=f"__Food Served:__",
+                                 value=f"Hamburger 🍔 x**{f1}** \nFries 🍟  x**{f2}** \n Drinks <:drink:964935572869222430> x**{f3}** \n Exp: **{xp}** xp\n Money: **${money}**",
+                                 inline=False)
+
             lvl_up_check = await self.update_data(interaction, details, xp, money)
             if lvl_up_check == "level_up":
                 play_embed.add_field(name="Level Up", value=f"**{interaction.user.name}**, Congrats!! You are now level **{details[5]+1}**, +{round((details[5]+1)/100, 3)}% increase in total buff", inline=False)
@@ -97,7 +100,7 @@ class Play(commands.Cog):
         query = "UPDATE profiles SET balance = $1, level = $2, exp = $3, total_exp = $4, buff = $5 WHERE userid = $6"
 
         if xp+exp >= total_exp:
-            await client.db.execute(query, balance+money, level+1, (xp+exp)-total_exp, total_exp+500, round(float(buff)+((level+1)/100), 3), user.id)
+            await client.db.execute(query, balance+money, level+1, (xp+exp)-total_exp, total_exp+250, round(float(buff)+((level+1)/100), 3), user.id)
             return "level_up"
         else:
             await client.db.execute(query, balance+money, level, (xp + exp), total_exp, buff, user.id)

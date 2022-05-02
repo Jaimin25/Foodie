@@ -15,8 +15,17 @@ class Profile(commands.Cog):
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     async def profile(self, interaction: discord.Interaction) -> None:
-        profile_view = await Profile.set_profile_view(self, interaction)
-        await interaction.response.send_message(embed=profile_view[0], view=profile_view[1])
+        account = await Profile.check_for_account(self, interaction)
+
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            await interaction.response.send_message(embed=em, view=v)
+        elif account[0] is True:
+
+            profile_view = await Profile.set_profile_view(self, interaction)
+            await interaction.response.send_message(embed=profile_view[0], view=profile_view[1])
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
@@ -102,7 +111,7 @@ class Profile(commands.Cog):
         if account[0] is False:
             await interaction.response.send_modal(Feedback())
         elif account[0] is True:
-            await Profile.profile_view(self, interaction)
+            await Profile.send_profile_view(self, interaction)
 
 
 class Feedback(discord.ui.Modal, title='Restaurant Name'):
@@ -141,10 +150,10 @@ class Feedback(discord.ui.Modal, title='Restaurant Name'):
             create_account_query = "INSERT INTO profiles(userid, name, location, balance, clean, tax, level, exp, total_exp, prestige, buff, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
             await client.db.execute(create_account_query,
                                     (user.id),
-                                    str(name), 1, 10000, 1, 1, 0, 0, 500,
+                                    str(name), 1, 10000, 1, 1, 1, 0, 250,
                                     0, round(1+current_buff, 3), (time.time()))
 
-        await Profile.profile_view(self, interaction)
+        await Profile.send_profile_view(self, interaction)
 
 async def setup(client):
     await client.add_cog(Profile(client))

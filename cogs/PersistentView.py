@@ -61,7 +61,15 @@ class UpgradesPersistentView(discord.ui.View):
 
     @discord.ui.button(emoji='3️⃣', style=discord.ButtonStyle.grey, custom_id='persistent_view:farm_upgrade_btn', row=1)
     async def farm_upgrade_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
-        return
+        account = await profile.Profile.check_for_account(self, interaction)
+
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            await interaction.response.edit_message(embed=em, view=v)
+        elif account[0] is True:
+            await upgrades.Upgrades.farm_upgrade_btn_callback(self, interaction)
 
     @discord.ui.button(label='Back', style=discord.ButtonStyle.red, custom_id='persistent_view:back_btn', row=2)
     async def back_btn(self, interaction: discord.Interaction, button: discord.ui.Button):

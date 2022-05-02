@@ -12,7 +12,7 @@ import random
 import datetime
 import pytz
 import traceback
-from cogs import PersistentView
+from cogs import PersistentView, upgrades
 import jishaku
 
 class MyBot(commands.Bot):

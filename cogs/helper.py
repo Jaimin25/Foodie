@@ -13,3 +13,6 @@ async def kitchen_upgrade():
 
 async def staff_upgrade():
     return upgrades['staff']
+
+async def farm_upgrade():
+    return upgrades['farm']
