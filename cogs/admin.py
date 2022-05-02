@@ -32,9 +32,6 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
                         inline=False)
         await ctx.send(embed=bedem)
 
-    async def green(self, interaction : discord.Interaction):
-        await interaction.response.send_message('This is green.', ephemeral=True)
-
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f"{round(self.client.latency * 1000)}ms")

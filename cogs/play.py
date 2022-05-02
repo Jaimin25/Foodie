@@ -47,7 +47,7 @@ class Play(commands.Cog):
             interaction: discord.Interaction,
             error: discord.app_commands.AppCommandError
     ):
-        await interaction.response.send_message(error, ephemeral=True)
+        raise error
 
     @app_commands.command(description="Serve food to customers")
     @app_commands.guilds(discord.Object(955385300513878026))
@@ -67,13 +67,16 @@ class Play(commands.Cog):
 
             details = await profile.Profile.get_user_details(self, interaction)
             buff = float(details[9])
-            min_food = 5 * details[5]
-            max_food = 10 * details[5]
+            min_food = 10 + (2*details[5])
+            max_food = 30 + (2*details[5])
+
+            min_xp = 20 + (2*details[5])
+            max_xp = 50 + (2*details[5])
 
             f1 = round((random.randint(min_food, max_food)) * buff)
             f2 = round((random.randint(min_food, max_food)) * buff)
             f3 = round((random.randint(min_food, max_food)) * buff)
-            xp = round((random.randint(20, 50)) * buff)
+            xp = round((random.randint(min_xp, max_xp)) * buff)
 
             money = round(float(f1) * (4.00 * buff) + float(f2) * (3.00 * buff) + float(f3) * (2.00 * buff))
 
