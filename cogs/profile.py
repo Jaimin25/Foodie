@@ -29,7 +29,7 @@ class Profile(commands.Cog):
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
-        await interaction.response.edit_message(embed=profile_view, view=self)
+        await interaction.response.edit_message(embed=profile_view)
 
     async def set_profile_view(self, interaction):
         client = interaction.client
