@@ -65,7 +65,7 @@ class Profile(commands.Cog):
         v = self
         v.remove_item(v2.back_btn)
         v.add_item(v1.upgrades_btn)
-        print(self)
+        print(v)
         return profile_embed, v
 
     async def get_user_details(self, interaction):
