@@ -20,7 +20,7 @@ class PlayPersistentView(discord.ui.View):
     def key(interaction: discord.Interaction):
         return interaction.user
 
-    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:serve_btn')
+    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:play_serve_btn')
     async def serve_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
         retry_after = self.cd.update_rate_limit(interaction)
 
@@ -42,7 +42,7 @@ class ProfilePersistentView(discord.ui.View):
         super().__init__(timeout=None)
         self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
-    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:serve_btn')
+    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:profile_serve_btn')
     async def serve_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
         retry_after = self.cd.update_rate_limit(interaction)
 
