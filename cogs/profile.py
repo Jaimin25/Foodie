@@ -64,7 +64,6 @@ class Profile(commands.Cog):
         v2 = PersistentView.PlayPersistentView()
         v = self
         v.clear_items()
-        v.add_item(v2.serve_btn)
         v.add_item(v1.upgrades_btn)
         return profile_embed, v
 
