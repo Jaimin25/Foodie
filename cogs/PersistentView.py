@@ -52,8 +52,6 @@ class ProfilePersistentView(discord.ui.View):
         super().__init__(timeout=None)
         self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
-
-
     async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
         if isinstance(error, ButtonOnCooldown):
 

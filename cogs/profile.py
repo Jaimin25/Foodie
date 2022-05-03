@@ -25,12 +25,12 @@ class Profile(commands.Cog):
         elif account[0] is True:
 
             profile_view = await Profile.set_profile_view(self, interaction)
-            await interaction.response.send_message(embed=profile_view[0], view=profile_view[1])
+            await interaction.response.send_message(embed=profile_view)
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
 
-        await interaction.response.edit_message(embed=profile_view[0], view=profile_view[1])
+        await interaction.response.edit_message(embed=profile_view)
 
     async def set_profile_view(self, interaction):
         client = interaction.client
@@ -63,9 +63,8 @@ class Profile(commands.Cog):
         v1 = PersistentView.ProfilePersistentView()
         v2 = PersistentView.PlayPersistentView()
         v = self
-
         v.remove_item(v2.back_btn)
-        return profile_embed, v
+        return profile_embed
 
     async def get_user_details(self, interaction):
         client = interaction.client
