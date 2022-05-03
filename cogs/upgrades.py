@@ -106,7 +106,7 @@ class Upgrades(commands.Cog):
                         amount = upg_data[i]['amount']
                         c = Upgrades.summa(self, int(amount), int(cost))
                         mess += f"**{name}** - {amount}/{max_upg}\nCost: ${int(c):,}\nBuff: +{buff}"
-
+                        print(mess)
                     else:
                         amount = 0
                         c = cost
