@@ -61,12 +61,7 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
 
-        v = self
-        v.clear_items()
-        v.add_item(self.serve_btn)
-
-        if v is PersistentView.PlayPersistentView:
-            print("profile")
+        v = PersistentView.ProfilePersistentView
 
         return profile_embed, v
 
