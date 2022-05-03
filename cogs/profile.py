@@ -64,9 +64,7 @@ class Profile(commands.Cog):
         v2 = PersistentView.PlayPersistentView()
         v = self
 
-        v.clear_items()
-        v.add_item(v.serve_btn)
-        v.add_item(v1.upgrades_btn)
+        v.remove_item(v2.back_btn)
         return profile_embed, v
 
     async def get_user_details(self, interaction):
