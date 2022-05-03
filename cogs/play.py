@@ -50,7 +50,7 @@ class Play(commands.Cog):
             interaction: discord.Interaction,
             error: discord.app_commands.AppCommandError
     ):
-        raise error
+        await interaction.response.send_message(content=error, ephemeral=True)
 
     @app_commands.command(description="Collect food materials from here")
     @app_commands.guilds(discord.Object(955385300513878026))
