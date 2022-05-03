@@ -25,12 +25,15 @@ class Profile(commands.Cog):
         elif account[0] is True:
 
             profile_view = await Profile.set_profile_view(self, interaction)
-            await interaction.response.send_message(embed=profile_view[0], view=profile_view[1])
+            v = self
+
+            await interaction.response.send_message(embed=profile_view[0], view=v)
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
         print(self)
-        await interaction.response.edit_message(embed=profile_view[0], view=profile_view[1])
+        v = self
+        await interaction.response.edit_message(embed=profile_view, view=v)
 
     async def set_profile_view(self, interaction):
         client = interaction.client
@@ -60,10 +63,7 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Tax", value=f"{tax}", inline=False)
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
-
-        v = self
-
-        return profile_embed, v
+        return profile_embed
 
     async def get_user_details(self, interaction):
         client = interaction.client
