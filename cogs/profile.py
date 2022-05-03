@@ -26,13 +26,16 @@ class Profile(commands.Cog):
 
             profile_view = await Profile.set_profile_view(self, interaction)
             v = self
-
-            await interaction.response.send_message(embed=profile_view[0], view=v)
+            v.clear_items()
+            v.add_item(self.serve_btn)
+            await interaction.response.send_message(embed=profile_view, view=v)
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
         print(self)
         v = self
+        v.clear_items()
+        v.add_item(self.serve_btn)
         await interaction.response.edit_message(embed=profile_view, view=v)
 
     async def set_profile_view(self, interaction):
