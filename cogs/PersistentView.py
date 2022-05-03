@@ -15,7 +15,7 @@ class PlayPersistentView(discord.ui.View):
 
     def __init__(self):
         super().__init__(timeout=None)
-        self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
+        self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
 
 
     async def interaction_check(self, interaction: discord.Interaction):
@@ -50,7 +50,7 @@ class PlayPersistentView(discord.ui.View):
 class ProfilePersistentView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
+        self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
 
     async def interaction_check(self, interaction: discord.Interaction):
         retry_after = self.cd.update_rate_limit(interaction)

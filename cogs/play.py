@@ -183,7 +183,7 @@ class Play(commands.Cog):
 
     @app_commands.command(description="Serve food to customers")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     async def serve(self, interaction):
         await Play.serve_btn_callback(self, interaction, "send")
 
