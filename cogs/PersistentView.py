@@ -18,15 +18,6 @@ class PlayPersistentView(discord.ui.View):
         self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
 
 
-    async def interaction_check(self, interaction: discord.Interaction):
-        retry_after = self.cd.update_rate_limit(interaction)
-
-        if retry_after:
-            return True
-
-            # not rate limited
-        return True
-
     async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
         if isinstance(error, ButtonOnCooldown):
 
@@ -61,14 +52,7 @@ class ProfilePersistentView(discord.ui.View):
         super().__init__(timeout=None)
         self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
 
-    async def interaction_check(self, interaction: discord.Interaction):
-        retry_after = self.cd.update_rate_limit(interaction)
 
-        if retry_after:
-            return True
-
-            # not rate limited
-        return True
 
     async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
         if isinstance(error, ButtonOnCooldown):
