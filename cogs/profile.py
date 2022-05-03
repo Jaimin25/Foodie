@@ -63,7 +63,7 @@ class Profile(commands.Cog):
 
         v = PersistentView.ProfilePersistentView()
         v.serve_btn = self.serve_btn
-        print(self.serve_btn)
+        print(self)
         return profile_embed, v
 
     async def get_user_details(self, interaction):
