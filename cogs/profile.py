@@ -25,18 +25,11 @@ class Profile(commands.Cog):
         elif account[0] is True:
 
             profile_view = await Profile.set_profile_view(self, interaction)
-            v = self
-            v.clear_items()
-            v.add_item(self.serve_btn)
-            await interaction.response.send_message(embed=profile_view, view=v)
+            await interaction.response.send_message(embed=profile_view)
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
-        print(self)
-        v = self
-        v.clear_items()
-        v.add_item(self.serve_btn)
-        await interaction.response.edit_message(embed=profile_view, view=v)
+        await interaction.response.edit_message(embed=profile_view, v=self)
 
     async def set_profile_view(self, interaction):
         client = interaction.client
