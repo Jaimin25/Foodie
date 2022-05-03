@@ -63,7 +63,7 @@ class Profile(commands.Cog):
         v1 = PersistentView.ProfilePersistentView()
         v2 = PersistentView.PlayPersistentView()
         v = self
-        v.remove_item(PersistentView.PlayPersistentView.back_btn())
+        v.remove_item(PersistentView.PlayPersistentView.back_btn)
         v.add_item(v1.upgrades_btn)
         print(v)
         return profile_embed, v
