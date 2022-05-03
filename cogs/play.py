@@ -4,7 +4,7 @@ import discord
 from discord.ui import Button, View
 from discord.ext import commands, tasks
 from discord import app_commands
-from cogs import PersistentView, profile
+from cogs import PersistentView, profile, upgrades
 import random
 import time
 
@@ -128,6 +128,12 @@ class Play(commands.Cog):
         farm_embed.add_field(name="Storage", value=f"{amount:,}/{storage_space:,} ({round((int(amount)/int(storage_space))*100,1)})%", inline=False)
 
         await interaction.response.send_message(embed=farm_embed, view=v)
+
+    @app_commands.command(description="View your upgrades")
+    @app_commands.guilds(discord.Object(955385300513878026))
+    @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
+    async def upgrades(self, interaction) -> None:
+        await upgrades.Upgrades.upgrades_btn_callback(self, interaction)
 
     @app_commands.command(description="Serve food to customers")
     @app_commands.guilds(discord.Object(955385300513878026))
