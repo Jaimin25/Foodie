@@ -61,7 +61,7 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
 
-        v = PersistentView.ProfilePersistentView()
+        v = self
         v.serve_btn = self.serve_btn
         print(self)
         return profile_embed, v
