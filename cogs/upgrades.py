@@ -242,6 +242,8 @@ class Upgrades(commands.Cog):
                 bal = int(user_data[2])
                 current_buff = user_data[9]
 
+                current_rate = 2 if farm_data is None else farm_data[1]
+
                 amount = 0 if upg_data is None else upg_data[3]
                 success_embed = discord.Embed(title="Kitchen", color=0xfee3a8)
                 for x in upg:
@@ -260,9 +262,18 @@ class Upgrades(commands.Cog):
                             query = "UPDATE upgrades SET amount = $1 WHERE userid = $2 AND name = $3"
                             await self.client.db.execute(query, amount+1, user.id, item.name)
 
-                        if x != "storage":
-                            query = "UPDATE farm SET storage = $1 WHERE userid = $2"
-                            await self.client.db.execute(query, storage_space+5000, user.id)
+                        if type == "farm":
+                            if farm_data is None:
+                                farm_query = "INSERT INTO farm(userid, production, storage, amount) VALUES($1, $2, $3, $4)"
+                                await interaction.client.db.execute(farm_query, user.id, 2, 10000, 10000)
+
+                            if item.name == "storage":
+                                query = "UPDATE farm SET storage = $1 WHERE userid = $2"
+                                await self.client.db.execute(query, storage_space+5000, user.id)
+                            else:
+                                query = "UPDATE farm SET production = $1 WHERE userid = $2"
+
+                                await self.client.db.execute(query, float(current_rate)+float(buff), user.id)
                         else:
                             query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
                             await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
@@ -287,8 +298,9 @@ class Upgrades(commands.Cog):
                 else:
                     if type == "staff":
                         success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy hire this person.")
-                    elif x == "storage":
+                    else:
                         success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
+
                     success_embed.set_footer(text=f"Cost: ${int(cost):,}\nBalance: ${int(bal):,}")
 
             return success_embed

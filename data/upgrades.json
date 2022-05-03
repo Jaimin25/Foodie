@@ -74,7 +74,7 @@
       "buff": "5000",
       "max_upgrades": "20"
     },
-    "fertilizer": {
+    "fertilizers": {
       "cost": "500",
       "buff": "0.05",
       "max_upgrades": "30"

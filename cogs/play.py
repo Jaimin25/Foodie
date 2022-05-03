@@ -61,10 +61,10 @@ class Play(commands.Cog):
         farm_embed.set_footer(text="test", icon_url=interaction.user.avatar)
 
         farm_data = await interaction.client.db.fetchrow("SELECT * FROM farm WHERE userid = $1", user.id)
-        upg_data = await interaction.client.db.fetch("SELECT * FROM upgrades WHERE userid = $1 AND type = $2", user.id, "farm")
+
         cooldowns = await interaction.client.db.fetchrow("SELECT userid, farm_produce FROM cooldowns WHERE userid = $1", user.id)
 
-        production = 2 if farm_data is None else farm_data[1]
+        production = 2 if farm_data is None else round(farm_data[1], 2)
         storage_space = 10000 if farm_data is None else farm_data[2]
         amount = 10000 if farm_data is None else farm_data[3]
 
@@ -73,7 +73,7 @@ class Play(commands.Cog):
         check_time = int(current_time)-int(production_collected_at)
         check_time = 3600 if check_time > 3600 else check_time
 
-        produce_amount = 2*int(check_time)
+        produce_amount = production*int(check_time)
 
         v = View()
         collect_btn = Button()
