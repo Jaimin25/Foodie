@@ -15,7 +15,7 @@ class PlayPersistentView(discord.ui.View):
 
     def __init__(self):
         super().__init__(timeout=None)
-        self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
+        self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
 
     async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
@@ -50,7 +50,7 @@ class PlayPersistentView(discord.ui.View):
 class ProfilePersistentView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
+        self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
 
 
@@ -95,7 +95,7 @@ class ProfilePersistentView(discord.ui.View):
 class UpgradesPersistentView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
+        self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
     async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
             if isinstance(error, ButtonOnCooldown):
