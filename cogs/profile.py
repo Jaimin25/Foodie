@@ -66,7 +66,7 @@ class Profile(commands.Cog):
         v.clear_items()
         v.add_item(v2.serve_btn)
         v.add_item(v1.upgrades_btn)
-        return profile_embed
+        return profile_embed, v
 
     async def get_user_details(self, interaction):
         client = interaction.client
