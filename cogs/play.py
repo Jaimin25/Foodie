@@ -74,8 +74,8 @@ class Play(commands.Cog):
             if typee == "edit":
                 v = self
                 v.clear_items()
-                v.add_items(self.serve_btn)
-                v.add_items(self.back_btn)
+                v.add_item(self.serve_btn)
+                v.add_item(self.back_btn)
 
             if lvl_up_check == "level_up":
                 play_embed.add_field(name="Level Up",
