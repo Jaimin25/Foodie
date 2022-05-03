@@ -111,7 +111,7 @@ class Upgrades(commands.Cog):
                         amount = 0
                         c = cost
                         mess += f"**{name}** - {amount}/{max_upg}\nCost: ${int(c):,}\nBuff: +{buff}"
-
+                print(mess)
                 upg_embed.description = mess
 
                 upg_embed.set_footer(text=f"Current Buff: {round(current_buff, 3)}%\nMax Buff: {max_buff}%\nMax Cost: ${n:,}")
