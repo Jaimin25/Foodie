@@ -75,9 +75,9 @@ class Play(commands.Cog):
                 play_embed.add_field(name="Level Up",
                                      value=f"**{interaction.user.name}**, Congrats!! You are now level **{details[5] + 1}**, +{round((details[5] + 1) / 100, 3)}% increase in total buff",
                                      inline=False)
-                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.edit_message(embed=play_embed)
+                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.send_message(embed=play_embed, view=self)
             elif lvl_up_check is None or lvl_up_check != "level_up":
-                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.edit_message(embed=play_embed)
+                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.send_message(embed=play_embed, view=self)
             print(self)
     async def upgrades_btn_callback(self, interaction):
         profile_embed = discord.Embed(title=interaction.user.name, color=0xfee3a8)
