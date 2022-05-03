@@ -30,15 +30,8 @@ class Upgrades(commands.Cog):
 
         await interaction.response.edit_message(embed=profile_embed, view=v)
 
-    @app_commands.command(description="View your upgrades")
-    @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
-    async def upgradess(self, interaction) -> None:
-        await Upgrades.upgrades_btn_callback(self, interaction)
-
     async def kitchen_upgrade_btn_callback(self, interaction):
         await Upgrades.refresh_embed_view(self, interaction, "kitchen", "edit")
-
 
     async def staff_upgrade_btn_callback(self, interaction):
         await Upgrades.refresh_embed_view(self, interaction, "staff", "edit")
@@ -138,6 +131,12 @@ class Upgrades(commands.Cog):
             n = n + int(c) * 250
             sum = sum + n
         return sum
+
+    @app_commands.command(description="View your upgrades")
+    @app_commands.guilds(discord.Object(955385300513878026))
+    @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
+    async def upgradess(self, interaction) -> None:
+        await Upgrades.upgrades_btn_callback(self, interaction)
 
     @app_commands.command(description="Buy Kitchen Items")
     @app_commands.guilds(discord.Object(955385300513878026))
