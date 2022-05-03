@@ -187,7 +187,6 @@ class Play(commands.Cog):
     async def serve(self, interaction):
         await Play.serve_btn_callback(self, interaction, "send")
 
-
     async def update_data(self, interaction, details, xp, money):
         balance = details[2]
         level = details[5]
