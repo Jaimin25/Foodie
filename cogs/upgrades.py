@@ -144,7 +144,14 @@ class Upgrades(commands.Cog):
         Choice(name='Utensils', value=5)
     ])
     async def kitchenbuy(self, interaction, item: Choice[int]) -> None:
+        account = await profile.Profile.check_for_account(self, interaction)
 
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            await interaction.response.send_message(embed=em, view=v)
+            
         v = View()
         buy_btn = Button()
         buy_btn.label = "Buy"
@@ -174,6 +181,13 @@ class Upgrades(commands.Cog):
         Choice(name='Receptionist', value=6)
     ])
     async def staffhire(self, interaction, item: Choice[int]) -> None:
+        account = await profile.Profile.check_for_account(self, interaction)
+
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            await interaction.response.send_message(embed=em, view=v)
 
         v = View()
         hire_btn = Button()
@@ -203,6 +217,13 @@ class Upgrades(commands.Cog):
         Choice(name='Seed', value=5)
     ])
     async def farmbuy(self, interaction, item: Choice[int]) -> None:
+        account = await profile.Profile.check_for_account(self, interaction)
+
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            await interaction.response.send_message(embed=em, view=v)
 
         v = View()
         buy_btn = Button()

@@ -56,6 +56,14 @@ class Play(commands.Cog):
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     async def farm(self, interaction) -> None:
+        account = await profile.Profile.check_for_account(self, interaction)
+
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            return await interaction.response.send_message(embed=em, view=v)
+
         farm_embed = discord.Embed(title="Farm", color=0xfee3a8)
         user = interaction.user
         farm_embed.set_footer(text="test", icon_url=interaction.user.avatar)
@@ -125,6 +133,13 @@ class Play(commands.Cog):
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
     async def serve(self, interaction) -> None:
+        account = await profile.Profile.check_for_account(self, interaction)
+
+        if account[0] is False:
+            em = account[1]
+            v = account[2]
+
+            return await interaction.response.send_message(embed=em, view=v)
 
         play_embed = discord.Embed(title=f"{interaction.user.name}", color=0xfee3a8)
         play_embed.set_footer(text="test",icon_url=interaction.user.avatar)
