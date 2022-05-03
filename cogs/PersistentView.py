@@ -42,31 +42,18 @@ class ProfilePersistentView(discord.ui.View):
         super().__init__(timeout=None)
         self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
-    async def interaction_check(self, interaction: discord.Interaction):
+    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:serve_btn')
+    async def serve_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
         retry_after = self.cd.update_rate_limit(interaction)
 
         if retry_after:
-            raise ButtonOnCooldown(retry_after)
-
-            # not rate limited
-        return True
-
-    async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
-        if isinstance(error, ButtonOnCooldown):
-
             cd_embed = discord.Embed(title=interaction.user.name, colour=0xfee3a8)
             cd_embed.add_field(name=f"Cooldown",
-                                    value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(error.retry_after,2)}s!")
+                               value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(retry_after, 2)}s!")
 
-            await interaction.response.edit_message(embed=cd_embed)
-        else:
-            # call the original on_error, which prints the traceback to stderr
-            await super().on_error(interaction, error, item)
+            return await interaction.response.edit_message(embed=cd_embed)
 
-    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:serve_btn')
-    async def serve_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
         await play.Play.serve_btn_callback(self, interaction, "edit")
-        self.remove_item(self.upgrades_btn)
 
     @discord.ui.button(label='Upgrades', style=discord.ButtonStyle.green, custom_id='persistent_view:upgrades_btn')
     async def upgrades_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
