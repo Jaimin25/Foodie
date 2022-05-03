@@ -245,7 +245,7 @@ class Upgrades(commands.Cog):
                 current_rate = 2 if farm_data is None else farm_data[1]
 
                 amount = 0 if upg_data is None else upg_data[3]
-                success_embed = discord.Embed(title="Kitchen", color=0xfee3a8)
+                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff" if type == "staff" else "Farm", color=0xfee3a8)
                 for x in upg:
                     if x == item.name.lower():
 
@@ -279,7 +279,7 @@ class Upgrades(commands.Cog):
                             await self.client.db.execute(query, bal - cost,
                                                          user.id)
                         else:
-                            
+
                             query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
                             await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
 
@@ -303,7 +303,9 @@ class Upgrades(commands.Cog):
                 else:
                     if type == "staff":
                         success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy hire this person.")
-                    else:
+                    elif type == "kitchen":
+                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
+                    elif type == "farm":
                         success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
 
                     success_embed.set_footer(text=f"Cost: ${int(cost):,}\nBalance: ${int(bal):,}")
