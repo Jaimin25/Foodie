@@ -95,7 +95,33 @@ class ProfilePersistentView(discord.ui.View):
 class UpgradesPersistentView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.cd_mapping = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.member)
+        self.cd = commands.CooldownMapping.from_cooldown(1, 5, key)
+
+    async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
+            if isinstance(error, ButtonOnCooldown):
+
+                cd_embed = discord.Embed(title=interaction.user.name, colour=0xfee3a8)
+                cd_embed.add_field(name=f"Cooldown",
+                                   value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(error.retry_after, 2)}s!")
+
+                await interaction.response.edit_message(embed=cd_embed)
+            else:
+                # call the original on_error, which prints the traceback to stderr
+                await super().on_error(interaction, error, item)
+
+    @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:play_serve_btn')
+    async def serve_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
+        retry_after = self.cd.update_rate_limit(interaction)
+
+        if retry_after:
+                cd_embed = discord.Embed(title=interaction.user.name, colour=0xfee3a8)
+                cd_embed.add_field(name=f"Cooldown",
+                                   value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(retry_after, 2)}s!")
+
+                return await interaction.response.edit_message(embed=cd_embed)
+
+        await play.Play.serve_btn_callback(self, interaction, "edit")
+
 
     @discord.ui.button(emoji='1️⃣', style=discord.ButtonStyle.grey, custom_id='persistent_view:kitchen_upgrade_btn', row=1)
     async def kitchen_upgrade_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
