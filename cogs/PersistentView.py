@@ -66,7 +66,7 @@ class ProfilePersistentView(discord.ui.View):
     @discord.ui.button(label='Serve', style=discord.ButtonStyle.blurple, custom_id='persistent_view:serve_btn')
     async def serve_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
         await play.Play.serve_btn_callback(self, interaction, "edit")
-        await self.remove_item(self.upgrades_btn)
+        self.remove_item(self.upgrades_btn)
 
     @discord.ui.button(label='Upgrades', style=discord.ButtonStyle.green, custom_id='persistent_view:upgrades_btn')
     async def upgrades_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
