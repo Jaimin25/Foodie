@@ -73,7 +73,7 @@ class Play(commands.Cog):
         check_time = int(current_time)-int(production_collected_at)
         check_time = 3600 if check_time > 3600 else check_time
 
-        produce_amount = production*int(check_time)
+        produce_amount = int(production*int(check_time))
 
         v = View()
         collect_btn = Button()

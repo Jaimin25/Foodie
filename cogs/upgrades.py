@@ -278,8 +278,8 @@ class Upgrades(commands.Cog):
                             query = "UPDATE profiles SET balance = $1 WHERE userid = $2"
                             await self.client.db.execute(query, bal - cost,
                                                          user.id)
-
                         else:
+                            
                             query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
                             await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
 
