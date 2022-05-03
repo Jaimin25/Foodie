@@ -65,7 +65,7 @@ class Profile(commands.Cog):
         v.clear_items()
         v.add_item(self.serve_btn)
 
-        if v is PersistentView.ProfilePersistentView:
+        if v is PersistentView.PlayPersistentView:
             print("profile")
 
         return profile_embed, v
