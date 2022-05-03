@@ -71,14 +71,21 @@ class Play(commands.Cog):
                 play_embed.add_field(name=f"Unable To Serve Food",
                                      value=f":exclamation: **{interaction.user.name}**, There are not enough materials to cook, please visit your farm `/farm` and collect materials to continue.")
 
+            if typee == "edit":
+                v = self
+                v.clear_items()
+                v.add_items(self.serve_btn)
+                v.add_items(self.back_btn)
+
             if lvl_up_check == "level_up":
                 play_embed.add_field(name="Level Up",
                                      value=f"**{interaction.user.name}**, Congrats!! You are now level **{details[5] + 1}**, +{round((details[5] + 1) / 100, 3)}% increase in total buff",
                                      inline=False)
-                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.send_message(embed=play_embed, view=self)
+
+                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.edit_message(embed=play_embed, view=v)
             elif lvl_up_check is None or lvl_up_check != "level_up":
-                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.send_message(embed=play_embed, view=self)
-            print(self)
+                await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.edit_message(embed=play_embed, view=v)
+
     async def upgrades_btn_callback(self, interaction):
         profile_embed = discord.Embed(title=interaction.user.name, color=0xfee3a8)
         profile_embed.set_thumbnail(url=interaction.user.avatar)
