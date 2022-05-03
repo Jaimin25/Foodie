@@ -61,7 +61,6 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
         v = PersistentView.ProfilePersistentView()
-
         return profile_embed, v
 
     async def get_user_details(self, interaction):

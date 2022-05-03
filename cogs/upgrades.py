@@ -30,6 +30,25 @@ class Upgrades(commands.Cog):
 
         await interaction.response.edit_message(embed=profile_embed, view=v)
 
+    @app_commands.command(description="View your upgrade")
+    @app_commands.guilds(discord.Object(955385300513878026))
+    @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
+    async def upgrade(self, interaction):
+        profile_embed = discord.Embed(title="Upgrades", color=0xfee3a8)
+        profile_embed.set_author(name=interaction.user.name)
+        profile_embed.add_field(name=":one: Kitchen", value="Upgrade kitchen stuff", inline=False)
+        profile_embed.add_field(name=":two: Staff", value="Hire new staffs", inline=False)
+        profile_embed.add_field(name=":three: Farm", value="Upgrade/Buy farm equipments", inline=False)
+
+        v = PersistentView.UpgradesPersistentView()
+        v.clear_items()
+        v.add_item(v.kitchen_upgrade_btn)
+        v.add_item(v.staff_upgrade_btn)
+        v.add_item(v.farm_upgrade_btn)
+        v.add_item(v.back_btn)
+
+        await interaction.response.send_message(embed=profile_embed, view=v)
+
     async def kitchen_upgrade_btn_callback(self, interaction):
         await Upgrades.refresh_embed_view(self, interaction, "kitchen", "edit")
 
