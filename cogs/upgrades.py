@@ -33,7 +33,7 @@ class Upgrades(commands.Cog):
     @app_commands.command(description="View your upgrades")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
-    async def upgrades(self, interaction) -> None:
+    async def upgradess(self, interaction) -> None:
         await Upgrades.upgrades_btn_callback(self, interaction)
 
     async def kitchen_upgrade_btn_callback(self, interaction):
