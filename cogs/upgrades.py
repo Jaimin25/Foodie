@@ -98,21 +98,18 @@ class Upgrades(commands.Cog):
                 max_buff = max_buff + float(max_upg) * float(buff)
                 current_buff = current_buff + float(buff)
 
-                mess = ""
-
                 for i in range(0, len(upg_data)):
 
                     if str(upg_data[i]['name']).lower() == x.lower():
                         amount = upg_data[i]['amount']
                         c = Upgrades.summa(self, int(amount), int(cost))
-                        mess += f"**{name}** - {amount}/{max_upg}\nCost: ${int(c):,}\nBuff: +{buff}\n\n"
-                        print(mess)
+
                     else:
                         amount = 0
                         c = cost
-                        mess += f"**{name}** - {amount}/{max_upg}\nCost: ${int(c):,}\nBuff: +{buff}\n\n"
 
-                upg_embed.description = mess
+                upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
+                                            value=f"Cost: ${int(c):,}\nBuff: +{buff}", inline=False)
 
                 upg_embed.set_footer(text=f"Current Buff: {round(current_buff, 3)}%\nMax Buff: {max_buff}%\nMax Cost: ${n:,}")
 
