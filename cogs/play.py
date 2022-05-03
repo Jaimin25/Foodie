@@ -78,7 +78,7 @@ class Play(commands.Cog):
                 await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.edit_message(embed=play_embed)
             elif lvl_up_check is None or lvl_up_check != "level_up":
                 await interaction.response.send_message(embed=play_embed, view=PersistentView.PlayPersistentView()) if typee == "send" else await interaction.response.edit_message(embed=play_embed)
-
+            print(self)
     async def upgrades_btn_callback(self, interaction):
         profile_embed = discord.Embed(title=interaction.user.name, color=0xfee3a8)
         profile_embed.set_thumbnail(url=interaction.user.avatar)
