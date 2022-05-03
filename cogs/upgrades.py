@@ -267,13 +267,18 @@ class Upgrades(commands.Cog):
                                 farm_query = "INSERT INTO farm(userid, production, storage, amount) VALUES($1, $2, $3, $4)"
                                 await interaction.client.db.execute(farm_query, user.id, 2, 10000, 10000)
 
-                            if item.name == "storage":
+                            if item.name == "Storage":
                                 query = "UPDATE farm SET storage = $1 WHERE userid = $2"
                                 await self.client.db.execute(query, storage_space+5000, user.id)
                             else:
                                 query = "UPDATE farm SET production = $1 WHERE userid = $2"
 
                                 await self.client.db.execute(query, float(current_rate)+float(buff), user.id)
+
+                            query = "UPDATE profiles SET balance = $1 WHERE userid = $2"
+                            await self.client.db.execute(query, bal - cost,
+                                                         user.id)
+
                         else:
                             query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
                             await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
