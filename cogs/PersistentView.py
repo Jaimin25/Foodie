@@ -48,7 +48,7 @@ class PlayPersistentView(discord.ui.View):
             cd_embed.add_field(name=f"Cooldown",
                                value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(retry_after, 2)}s!")
 
-        await interaction.response.edit_message(embed=cd_embed)
+            return await interaction.response.edit_message(embed=cd_embed)
 
         await play.Play.serve_btn_callback(self, interaction, "edit")
 
@@ -91,7 +91,10 @@ class ProfilePersistentView(discord.ui.View):
             cd_embed.add_field(name=f"Cooldown",
                                value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(retry_after, 2)}s!")
 
-        await interaction.response.edit_message(embed=cd_embed)
+            return await interaction.response.edit_message(embed=cd_embed)
+
+        await play.Play.serve_btn_callback(self, interaction, "edit")
+
 
     @discord.ui.button(label='Upgrades', style=discord.ButtonStyle.green, custom_id='persistent_view:upgrades_btn')
     async def upgrades_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
