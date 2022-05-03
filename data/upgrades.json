@@ -13,7 +13,7 @@
     "microwave": {
       "cost": "2000",
       "buff": "0.015",
-      "max_upgrades": "10"
+      "max_upgrades": "17"
     },
     "dishwasher": {
       "cost": "1500",
@@ -40,12 +40,12 @@
     "cheff": {
       "cost": "2250",
       "buff": "0.05",
-      "max_upgrades": "5"
+      "max_upgrades": "8"
     },
     "cook": {
       "cost": "1750",
       "buff": "0.005",
-      "max_upgrades": "15"
+      "max_upgrades": "13"
     },
     "busperson": {
       "cost": "3350",
@@ -55,7 +55,7 @@
     "receptionist": {
       "cost": "4000",
       "buff": "0.005",
-      "max_upgrades": "5"
+      "max_upgrades": "10"
     }
   },
   "farm": {
@@ -70,19 +70,19 @@
       "max_upgrades": "10"
     },
     "storage": {
-      "cost": "1000",
-      "buff": "500",
+      "cost": "3500",
+      "buff": "5000",
       "max_upgrades": "20"
     },
     "fertilizer": {
       "cost": "500",
       "buff": "0.05",
-      "max_upgrades": "40"
+      "max_upgrades": "30"
     },
     "seed": {
-      "cost": "2000",
-      "buff": "0.2",
-      "max_upgrades": "5"
+      "cost": "1500",
+      "buff": "0.1",
+      "max_upgrades": "10"
     }
   }
 }

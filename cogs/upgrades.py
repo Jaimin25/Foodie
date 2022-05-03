@@ -58,8 +58,6 @@ class Upgrades(commands.Cog):
 
             max_storage = 0
 
-        upg_data = await interaction.client.db.fetch("SELECT * FROM upgrades WHERE userid = $1 AND type = $2", user.id, type)
-
         v.add_item(v.back_btn)
 
         max_buff = 0.000
@@ -81,38 +79,39 @@ class Upgrades(commands.Cog):
             sum = Upgrades.summa(self, int(max_upg), int(cost))
             n = n + sum
 
+            amount = 0
+            c = cost
+            bufff = buff
+
+            if len(upg_data) > 0 and str(upg_data[0]['name']).lower() == x.lower():
+                amount = upg_data[0]['amount']
+                c = int(c)+(int(amount)*250)
+                bufff = round(float(bufff) + (float(bufff) * float(amount)), 3)
+
             if type == "farm":
 
                     if x != "storage":
                         max_buff = max_buff + float(max_upg) * float(buff)
-                        current_buff = current_buff + float(buff)
-                        upg_embed.add_field(name=f"{name} - 0/{max_upg}",
-                                              value=f"Cost: ${cost}\nBuff: +{buff}", inline=False)
+                        current_buff = current_buff + float(bufff)
+
+                        upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
+                                              value=f"Cost: ${int(c):,}\nBuff: +{buff}", inline=False)
                     else:
                         max_storage = max_storage + float(max_upg) * float(buff)
-                        upg_embed.add_field(name=f"{name} - 0/{max_upg}",
-                                            value=f"Cost: ${int(cost):,}\nSpace: +{buff}", inline=False)
+                        upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
+                                            value=f"Cost: ${int(c):,}\nSpace: +{buff}", inline=False)
                     upg_embed.set_footer(
                     text=f"Current Production Buff: +{round(current_buff, 3)}\nMax Production Buff: +{max_buff}\nMax Storage Space: {int(max_storage):,}\nMax Cost: ${n:,}")
 
             else:
 
-                amount = 0
-                c = cost
-
-                if len(upg_data) > 0 and str(upg_data[0]['name']).lower() == x.lower():
-
-                    amount = upg_data[0]['amount']
-                    c = Upgrades.summa(self, int(amount), int(cost))
-                    buff = float(buff)*float(amount)
-
                 max_buff = max_buff + float(max_upg) * float(buff)
-                current_buff = current_buff + float(buff)
+                current_buff = current_buff + float(bufff)
 
                 upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
-                                            value=f"Cost: ${int(c):,}\nBuff: +{buff}", inline=False)
+                                            value=f"Cost: ${int(c):,}\nBuff: +{bufff}", inline=False)
 
-                upg_embed.set_footer(text=f"Current Buff: {round(current_buff, 3)}%\nMax Buff: {max_buff}%\nMax Cost: ${n:,}")
+                upg_embed.set_footer(text=f"Current Buff: +{round(current_buff, 3)}\nMax Buff: +{round(max_buff, 3)}\nMax Cost: ${n:,}")
 
         if t is not None:
             if t == "edit":
@@ -134,7 +133,7 @@ class Upgrades(commands.Cog):
             sum = sum + n
         return sum
 
-    @app_commands.command(description="Buy/View Kitchen")
+    @app_commands.command(description="Buy Kitchen Items")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.choices(item=[
@@ -153,24 +152,92 @@ class Upgrades(commands.Cog):
 
         v.add_item(buy_btn)
 
-        success_embed = await self.refresh_upg_embed(interaction, item)
+        success_embed = await self.refresh_upg_embed(interaction, item, "kitchen")
 
         await interaction.response.send_message(embed=success_embed, view=v)
 
         async def buy_button_callback(interaction: discord.Interaction):
-            success_embed = await self.refresh_upg_embed(interaction, item)
+            success_embed = await self.refresh_upg_embed(interaction, item, "kitchen")
             await interaction.response.send_message(embed=success_embed, view=v)
 
         buy_btn.callback = buy_button_callback
 
-    async def refresh_upg_embed(self, interaction, item):
+    @app_commands.command(description="Hire Staff")
+    @app_commands.guilds(discord.Object(955385300513878026))
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.choices(item=[
+        Choice(name='Manager', value=1),
+        Choice(name='Waiter', value=2),
+        Choice(name='Cheff', value=3),
+        Choice(name='Cook', value=4),
+        Choice(name='Busperson', value=5),
+        Choice(name='Receptionist', value=6)
+    ])
+    async def staffhire(self, interaction, item: Choice[int]) -> None:
+
+        v = View()
+        hire_btn = Button()
+        hire_btn.label = "Hire"
+        hire_btn.style = discord.ButtonStyle.blurple
+
+        v.add_item(hire_btn)
+
+        success_embed = await self.refresh_upg_embed(interaction, item, "staff")
+
+        await interaction.response.send_message(embed=success_embed, view=v)
+
+        async def hire_button_callback(interaction: discord.Interaction):
+            success_embed = await self.refresh_upg_embed(interaction, item, "staff")
+            await interaction.response.send_message(embed=success_embed, view=v)
+
+        hire_btn.callback = hire_button_callback
+
+    @app_commands.command(description="Buy Kitchen Items")
+    @app_commands.guilds(discord.Object(955385300513878026))
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.choices(item=[
+        Choice(name='Farmland', value=1),
+        Choice(name='Machines', value=2),
+        Choice(name='Storage', value=3),
+        Choice(name='Fertilizers', value=4),
+        Choice(name='Seed', value=5)
+    ])
+    async def farmbuy(self, interaction, item: Choice[int]) -> None:
+
+        v = View()
+        buy_btn = Button()
+        buy_btn.label = "Buy"
+        buy_btn.style = discord.ButtonStyle.blurple
+
+        v.add_item(buy_btn)
+
+        success_embed = await self.refresh_upg_embed(interaction, item, "farm")
+
+        await interaction.response.send_message(embed=success_embed, view=v)
+
+        async def buy_button_callback(interaction: discord.Interaction):
+            success_embed = await self.refresh_upg_embed(interaction, item, "farm")
+            await interaction.response.send_message(embed=success_embed, view=v)
+
+        buy_btn.callback = buy_button_callback
+
+    async def refresh_upg_embed(self, interaction, item, type):
 
             if item is not None:
-                upg = await helper.kitchen_upgrade()
+                if type == "kitchen":
+                    upg = await helper.kitchen_upgrade()
+                elif type == "staff":
+                    upg = await helper.staff_upgrade()
+                else:
+                    upg = await helper.farm_upgrade()
+
                 user = interaction.user
                 upg_data = await self.client.db.fetchrow("SELECT * FROM upgrades WHERE userid = $1 AND name = $2", user.id,
                                                          item.name)
                 user_data = await profile.Profile.get_user_details(self, interaction)
+
+                farm_data = await interaction.client.db.fetchrow("SELECT * FROM farm WHERE userid = $1", user.id)
+                storage_space = 10000 if farm_data is None else farm_data[2]
 
                 bal = int(user_data[2])
                 current_buff = user_data[9]
@@ -193,11 +260,23 @@ class Upgrades(commands.Cog):
                             query = "UPDATE upgrades SET amount = $1 WHERE userid = $2 AND name = $3"
                             await self.client.db.execute(query, amount+1, user.id, item.name)
 
-                        query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
-                        await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
+                        if x != "storage":
+                            query = "UPDATE farm SET storage = $1 WHERE userid = $2"
+                            await self.client.db.execute(query, storage_space+5000, user.id)
+                        else:
+                            query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
+                            await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
 
-
-                        success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
+                        if type == "staff":
+                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
+                                                    value=f"Succefully hired **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total multi.",
+                                                    inline=False)
+                        elif item.name == "Storage":
+                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
+                                                    value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total storage space.",
+                                                    inline=False)
+                        else:
+                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
                                                 value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total multi.",
                                                 inline=False)
                         success_embed.set_footer(text=f"Balance: {(bal-cost):,}")
@@ -206,7 +285,11 @@ class Upgrades(commands.Cog):
                                                 value=f"**{interaction.user.name}**, This item is already maxed!")
 
                 else:
-                    success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item")
+                    if type == "staff":
+                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy hire this person.")
+                    elif x == "storage":
+                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
+                    success_embed.set_footer(text=f"Cost: ${int(cost):,}\nBalance: ${int(bal):,}")
 
             return success_embed
 
