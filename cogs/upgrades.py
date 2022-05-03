@@ -71,6 +71,8 @@ class Upgrades(commands.Cog):
         for x in upg:
 
             name = x.capitalize()
+            upg_data = await interaction.client.db.fetch("SELECT * FROM upgrades WHERE userid = $1 AND name = $2",
+                                                         user.id, x.capitalize())
 
             max_upg = upg[x]['max_upgrades']
             cost = upg[x]['cost']
@@ -95,18 +97,17 @@ class Upgrades(commands.Cog):
 
             else:
 
+                amount = 0
+                c = cost
+
+                if len(upg_data) > 0 and str(upg_data[0]['name']).lower() == x.lower():
+
+                    amount = upg_data[0]['amount']
+                    c = Upgrades.summa(self, int(amount), int(cost))
+                    buff = float(buff)*float(amount)
+
                 max_buff = max_buff + float(max_upg) * float(buff)
                 current_buff = current_buff + float(buff)
-
-                for i in range(0, len(upg_data)):
-
-                    if str(upg_data[i]['name']).lower() == x.lower():
-                        amount = upg_data[i]['amount']
-                        c = Upgrades.summa(self, int(amount), int(cost))
-
-                    else:
-                        amount = 0
-                        c = cost
 
                 upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
                                             value=f"Cost: ${int(c):,}\nBuff: +{buff}", inline=False)
