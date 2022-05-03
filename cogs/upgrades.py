@@ -47,6 +47,7 @@ class Upgrades(commands.Cog):
         v.clear_items()
         upg_embed = discord.Embed(title=type.capitalize(), color=0xfee3a8)
         upg_embed.set_author(name=interaction.user.name)
+        user = interaction.user
 
         if type == "kitchen":
             upg = await helper.kitchen_upgrade()
@@ -57,19 +58,26 @@ class Upgrades(commands.Cog):
 
             max_storage = 0
 
+        upg_data = await interaction.client.db.fetch("SELECT * FROM upgrades WHERE userid = $1 AND type = $2", user.id, type)
+
         v.add_item(v.back_btn)
 
         max_buff = 0.000
         current_buff = 0.000
+        c = 0
+        n = 0
+        sum = 0
 
         for x in upg:
-
 
             name = x.capitalize()
 
             max_upg = upg[x]['max_upgrades']
             cost = upg[x]['cost']
             buff = upg[x]['buff']
+
+            sum = Upgrades.summa(self, int(max_upg), int(cost))
+            n = n + sum
 
             if type == "farm":
 
@@ -81,17 +89,28 @@ class Upgrades(commands.Cog):
                     else:
                         max_storage = max_storage + float(max_upg) * float(buff)
                         upg_embed.add_field(name=f"{name} - 0/{max_upg}",
-                                            value=f"Cost: ${cost}\nSpace: +{buff}", inline=False)
+                                            value=f"Cost: ${int(cost):,}\nSpace: +{buff}", inline=False)
                     upg_embed.set_footer(
-                    text=f"Current Production Buff: +{round(current_buff, 3)}\nMax Production Buff: +{max_buff}\nMax Storage Space: {int(max_storage):,}")
+                    text=f"Current Production Buff: +{round(current_buff, 3)}\nMax Production Buff: +{max_buff}\nMax Storage Space: {int(max_storage):,}\nMax Cost: ${n:,}")
 
             else:
+
                 max_buff = max_buff + float(max_upg) * float(buff)
                 current_buff = current_buff + float(buff)
-                upg_embed.add_field(name=f"{name} - 0/{max_upg}",
-                                    value=f"Cost: ${cost}\nBuff: +{buff}", inline=False)
 
-                upg_embed.set_footer(text=f"Current Buff: {round(current_buff, 3)}%\nMax Buff: {max_buff}%")
+                for i in range(0, len(upg_data)):
+
+                    if str(upg_data[i]['name']).lower() == x.lower():
+                        amount = upg_data[i]['amount']
+                        c = Upgrades.summa(self, int(amount), int(cost))
+
+                    else:
+                        amount = 0
+                        c = cost
+                upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
+                                            value=f"Cost: ${int(c):,}\nBuff: +{buff}", inline=False)
+
+                upg_embed.set_footer(text=f"Current Buff: {round(current_buff, 3)}%\nMax Buff: {max_buff}%\nMax Cost: ${n:,}")
 
         if t is not None:
             if t == "edit":
@@ -101,13 +120,21 @@ class Upgrades(commands.Cog):
         else:
             await interaction.response.edit_message(embed=upg_embed, view=v)
 
+    def summa(self, max_upg, cost):
+        c=0
+        sum = 0
+        while max_upg:
+            if c >= int(max_upg):
+                break
+            c += 1
+            n = int(cost)
+            n = n + int(c) * 250
+            sum = sum + n
+        return sum
+
     @app_commands.command(description="Buy/View Kitchen")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
-    @app_commands.choices(type=[
-        Choice(name='Buy', value=1),
-        Choice(name='View', value=2)
-    ])
     @app_commands.choices(item=[
         Choice(name='Stove', value=1),
         Choice(name='Oven', value=2),
@@ -115,7 +142,7 @@ class Upgrades(commands.Cog):
         Choice(name='Dishwasher', value=4),
         Choice(name='Utensils', value=5)
     ])
-    async def kitchen(self, interaction, type: Choice[int], item: Choice[int]=None) -> None:
+    async def kitchenbuy(self, interaction, item: Choice[int]) -> None:
 
         v = View()
         buy_btn = Button()
@@ -124,10 +151,7 @@ class Upgrades(commands.Cog):
 
         v.add_item(buy_btn)
 
-        if type.name == "View":
-            await self.refresh_embed_view(interaction, "kitchen", "send")
-        elif type.name == "Buy":
-            success_embed = await self.refresh_upg_embed(interaction, item)
+        success_embed = await self.refresh_upg_embed(interaction, item)
 
         await interaction.response.send_message(embed=success_embed, view=v)
 
@@ -154,7 +178,7 @@ class Upgrades(commands.Cog):
                 for x in upg:
                     if x == item.name.lower():
 
-                        cost = int(upg[x]["cost"]) + int(amount * 500)
+                        cost = int(upg[x]["cost"]) + int(amount * 250)
                         max_upgrades = int(upg[x]["max_upgrades"])
                         buff = upg[x]["buff"]
 
