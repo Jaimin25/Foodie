@@ -27,7 +27,7 @@ class PlayPersistentView(discord.ui.View):
         if retry_after:
             cd_embed = discord.Embed(title=interaction.user.name, colour=0xfee3a8)
             cd_embed.add_field(name=f"Cooldown",
-                               value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(error.retry_after, 2)}s!")
+                               value=f":exclamation: **{interaction.user.name}**, You're on cooldown for {round(retry_after, 2)}s!")
 
             return await interaction.response.edit_message(embed=cd_embed)
 
