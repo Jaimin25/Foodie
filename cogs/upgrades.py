@@ -151,7 +151,7 @@ class Upgrades(commands.Cog):
             v = account[2]
 
             await interaction.response.send_message(embed=em, view=v)
-            
+
         v = View()
         buy_btn = Button()
         buy_btn.label = "Buy"
@@ -323,7 +323,7 @@ class Upgrades(commands.Cog):
 
                 else:
                     if type == "staff":
-                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy hire this person.")
+                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to hire this person.")
                     elif type == "kitchen":
                         success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
                     elif type == "farm":
