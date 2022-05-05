@@ -17,7 +17,16 @@ class PlayPersistentView(discord.ui.View):
         super().__init__(timeout=None)
         self.cd = commands.CooldownMapping.from_cooldown(1, 10, key)
 
+    async def interaction_check(self, interaction: discord.Interaction):
+        retry_after = self.cd.update_rate_limit(interaction)
+        if retry_after:
+            # rate limited
+            # we could raise `commands.CommandOnCooldown` instead, but we only need the `retry_after` value
+            raise ButtonOnCooldown(retry_after)
 
+        # not rate limited
+        return True
+    
     async def on_error(self, interaction: discord.Interaction, error: Exception, item: discord.ui.Item):
         if isinstance(error, ButtonOnCooldown):
 
