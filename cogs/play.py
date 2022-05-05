@@ -13,7 +13,7 @@ class Play(commands.Cog):
         self.client = client
         client.tree.on_error = self.on_app_command_error
 
-    async def serve_btn_callback(self, interaction, typee):
+    async def serve_btn_callback(self, interaction, typee, v=None):
 
         account = await profile.Profile.check_for_account(self, interaction)
 
@@ -76,7 +76,6 @@ class Play(commands.Cog):
                 v = self
                 v.clear_items()
                 v.add_item(self.serve_btn)
-                v.add_item(v1.back_btn)
 
             if lvl_up_check == "level_up":
                 play_embed.add_field(name="Level Up",
@@ -140,7 +139,7 @@ class Play(commands.Cog):
         collect_btn.label = "Collect"
         collect_btn.style = discord.ButtonStyle.blurple
 
-        if int(amount)+int(produce_amount) < storage_space and check_time >= 60:
+        if check_time >= 60 and amount < storage_space:
             collect_btn.disabled = False
         else:
             collect_btn.disabled = True
@@ -150,8 +149,13 @@ class Play(commands.Cog):
                 farm_query = "INSERT INTO farm(userid, production, storage, amount) VALUES($1, $2, $3, $4)"
                 await interaction.client.db.execute(farm_query, user.id, 2, 10000, 10000)
             else:
-                farm_query = "UPDATE farm SET amount = $1 WHERE userid = $2"
-                await interaction.client.db.execute(farm_query, amount+produce_amount, user.id)
+                if amount+produce_amount > storage_space:
+                    farm_query = "UPDATE farm SET amount = $1 WHERE userid = $2"
+                    await interaction.client.db.execute(farm_query, amount+(storage_space-amount), user.id)
+                    print(amount+(storage_space-amount))
+                else:
+                    farm_query = "UPDATE farm SET amount = $1 WHERE userid = $2"
+                    await interaction.client.db.execute(farm_query, amount+produce_amount, user.id)
 
             if cooldowns is None:
                 cd_query = "INSERT INTO cooldowns(userid, farm_produce) VALUES($1, $2)"
@@ -166,7 +170,12 @@ class Play(commands.Cog):
                                  value=f"Current production rate of your farm is +{production}/s materials.",
                                  inline=False)
             farm_embed.add_field(name="Production", value=f"0 materials", inline=False)
-            farm_embed.add_field(name="Storage",
+            if amount + produce_amount > storage_space:
+                farm_embed.add_field(name="Storage",
+                                     value=f"{(int(storage_space)):,}/{storage_space:,} ({round(((int(amount) + int(produce_amount)) / int(storage_space)) * 100, 1)})%",
+                                     inline=False)
+            else:
+                farm_embed.add_field(name="Storage",
                                  value=f"{(int(amount)+int(produce_amount)):,}/{storage_space:,} ({round(((int(amount)+int(produce_amount))/int(storage_space)) * 100, 1)})%",
                                  inline=False)
 
@@ -175,7 +184,7 @@ class Play(commands.Cog):
         collect_btn.callback = collect_btn_callback
         v.add_item(collect_btn)
 
-        farm_embed.add_field(name="Rate", value=f"Current production rate of your farm is +{production}/s materials for 1h.", inline=False)
+        farm_embed.add_field(name="Rate", value=f"Current production rate of your farm is +{production}/s materials for 1h.\nYou can collect materials after every 1m.", inline=False)
         farm_embed.add_field(name="Production", value=f"{produce_amount:,} materials", inline=False)
         farm_embed.add_field(name="Storage", value=f"{amount:,}/{storage_space:,} ({round((int(amount)/int(storage_space))*100,1)})%", inline=False)
 

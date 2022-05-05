@@ -2,7 +2,7 @@ import discord
 from discord.ui import Button, View
 from discord.ext import commands, tasks
 from discord import app_commands
-from cogs import PersistentView, helper
+from cogs import PersistentView, helper, play
 import random
 import traceback
 import time
@@ -29,7 +29,6 @@ class Profile(commands.Cog):
 
     async def send_profile_view(self, interaction):
         profile_view = await Profile.set_profile_view(self, interaction)
-
         await interaction.response.edit_message(embed=profile_view[0], view=profile_view[1])
 
     async def set_profile_view(self, interaction):
@@ -60,10 +59,18 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Tax", value=f"{tax}", inline=False)
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
+        if type(self) is PersistentView.PlayPersistentView:
+            v = self
 
-        v = PersistentView.ProfilePersistentView()
-        v.serve_btn = self.serve_btn
-        
+        elif type(self) is PersistentView.UpgradesPersistentView:
+            v = self
+            v2 = PersistentView.ProfilePersistentView()
+            v.clear_items()
+            v.add_item(v2.serve_btn)
+            v.add_item(v2.upgrades_btn)
+        else:
+            v = PersistentView.ProfilePersistentView()
+
         return profile_embed, v
 
     async def get_user_details(self, interaction):
