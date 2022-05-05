@@ -152,7 +152,7 @@ class Play(commands.Cog):
                 if amount+produce_amount > storage_space:
                     farm_query = "UPDATE farm SET amount = $1 WHERE userid = $2"
                     await interaction.client.db.execute(farm_query, amount+(storage_space-amount), user.id)
-                    print(amount+(storage_space-amount))
+
                 else:
                     farm_query = "UPDATE farm SET amount = $1 WHERE userid = $2"
                     await interaction.client.db.execute(farm_query, amount+produce_amount, user.id)

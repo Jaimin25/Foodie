@@ -185,7 +185,7 @@ class Upgrades(commands.Cog):
 
         async def buy_button_callback(interaction: discord.Interaction):
             success_embed = await self.refresh_upg_embed(interaction, item, "kitchen")
-            await interaction.response.send_message(embed=success_embed, view=v)
+            await interaction.response.edit_message(embed=success_embed, view=v)
 
         buy_btn.callback = buy_button_callback
 
@@ -222,7 +222,7 @@ class Upgrades(commands.Cog):
 
         async def hire_button_callback(interaction: discord.Interaction):
             success_embed = await self.refresh_upg_embed(interaction, item, "staff")
-            await interaction.response.send_message(embed=success_embed, view=v)
+            await interaction.response.edit_message(embed=success_embed, view=v)
 
         hire_btn.callback = hire_button_callback
 
@@ -258,7 +258,7 @@ class Upgrades(commands.Cog):
 
         async def buy_button_callback(interaction: discord.Interaction):
             success_embed = await self.refresh_upg_embed(interaction, item, "farm")
-            await interaction.response.send_message(embed=success_embed, view=v)
+            await interaction.response.edit_message(embed=success_embed, view=v)
 
         buy_btn.callback = buy_button_callback
 
