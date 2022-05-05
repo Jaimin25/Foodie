@@ -294,8 +294,8 @@ class Upgrades(commands.Cog):
                         max_upgrades = int(upg[x]["max_upgrades"])
                         buff = upg[x]["buff"]
 
-                if bal >= cost:
-                    if amount < max_upgrades:
+                if amount < max_upgrades:
+                    if bal >= cost:
                         if upg_data is None:
                             query = "INSERT INTO upgrades(userid, type, name, amount) VALUES ($1, $2, $3, $4)"
                             await self.client.db.execute(query, user.id, "kitchen", item.name, amount+1)
@@ -337,19 +337,20 @@ class Upgrades(commands.Cog):
                                                 value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total multi.",
                                                 inline=False)
                         success_embed.set_footer(text=f"Balance: {(bal-cost):,}")
+
+
                     else:
-                        success_embed.add_field(name=f":white_check_mark: {item.name}",
-                                                value=f"**{interaction.user.name}**, This item is already maxed!")
+                        if type == "staff":
+                            success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to hire this person.")
+                        elif type == "kitchen":
+                            success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
+                        elif type == "farm":
+                            success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
 
+                        success_embed.set_footer(text=f"Cost: ${int(cost):,}\nBalance: ${int(bal):,}")
                 else:
-                    if type == "staff":
-                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to hire this person.")
-                    elif type == "kitchen":
-                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
-                    elif type == "farm":
-                        success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
-
-                    success_embed.set_footer(text=f"Cost: ${int(cost):,}\nBalance: ${int(bal):,}")
+                    success_embed.add_field(name=f":white_check_mark: {item.name}",
+                                            value=f"**{interaction.user.name}**, This item is already maxed!")
 
             return success_embed
 
