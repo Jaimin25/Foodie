@@ -23,7 +23,7 @@ class Counter(commands.Cog):
         net_income = profile_details[3]
         balance = profile_details[2]
 
-        income_collect_at = 1 if not len(get_income_cd) > 0 else int(get_income_cd[1])
+        income_collect_at = 1 if not len(get_income_cd) > 0 or not get_income_cd is None else int(get_income_cd[1])
         time_now = int(time.time())
         time_spent = time_now-income_collect_at
 
