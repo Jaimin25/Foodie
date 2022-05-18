@@ -28,33 +28,33 @@
   },
   "staff": {
     "waiter": {
-      "cost": "1500",
-      "buff": "30",
+      "cost": "15000",
+      "buff": "20",
       "max_upgrades": "20"
     },
     "busperson": {
-      "cost": "1750",
-      "buff": "40",
+      "cost": "17500",
+      "buff": "20",
       "max_upgrades": "25"
     },
     "cheff": {
-      "cost": "2250",
-      "buff": "50",
+      "cost": "22500",
+      "buff": "25",
       "max_upgrades": "15"
     },
     "cook": {
-      "cost": "2500",
-      "buff": "75",
+      "cost": "25000",
+      "buff": "30",
       "max_upgrades": "10"
     },
     "receptionist": {
-      "cost": "25000",
-      "buff": "200",
+      "cost": "150000",
+      "buff": "100",
       "max_upgrades": "5"
     },
     "manager": {
-      "cost": "50000",
-      "buff": "400",
+      "cost": "200000",
+      "buff": "250",
       "max_upgrades": "5"
     }
   }
