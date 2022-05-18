@@ -35,7 +35,7 @@ class Accounts(commands.Cog):
                 create_account_query = "INSERT INTO profiles(userid, name, location, balance, income, clean, tax, prestige, buff, created_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
                 await client.db.execute(create_account_query,
                                         (user.id),
-                                       str(name), 1, 10000, 100, 1, 1,
+                                       str(name), 1, 100000, 100, 1, 1,
                                         0, 1, (time.time()))
                 await client.db.execute("INSERT INTO cooldowns(userid, income_collected) VALUES($1, $2)", user.id, 1)
                 await interaction.response.send_message(content=f"Félicitations **{user.name}**, Your profile has been created!\nView your profile using `/profile`\n`/guide` will help you on how to play! ")
