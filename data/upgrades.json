@@ -1,28 +1,28 @@
 {
   "kitchen": {
     "stove": {
-      "cost": "1000",
-      "buff": "50",
+      "cost": "25000",
+      "buff": "5",
       "max_upgrades": "20"
     },
     "utensils": {
-      "cost": "1250",
-      "buff": "25",
+      "cost": "35000",
+      "buff": "10",
       "max_upgrades": "40"
     },
     "oven": {
-      "cost": "1750",
-      "buff": "75",
+      "cost": "20000",
+      "buff": "15",
       "max_upgrades": "25"
     },
     "microwave": {
-      "cost": "2500",
-      "buff": "100",
+      "cost": "30000",
+      "buff": "20",
       "max_upgrades": "20"
     },
     "dishwasher": {
-      "cost": "2000",
-      "buff": "90",
+      "cost": "25000",
+      "buff": "30",
       "max_upgrades": "30"
     }
   },

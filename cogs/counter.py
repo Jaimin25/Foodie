@@ -29,9 +29,9 @@ class Counter(commands.Cog):
 
         counter_embed = discord.Embed(title="Income", color=client.embed_color)
 
-        if time_spent >= 60:
+        if time_spent >= 20:
 
-            total_income = 100 if income_collect_at == 1 else net_income*int(time_spent/60)
+            total_income = 100 if income_collect_at == 1 else net_income*int(time_spent)
 
 
             await client.db.execute("UPDATE cooldowns SET income_collected = $1 WHERE userid = $2", time.time(), user.id)
