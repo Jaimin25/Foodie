@@ -37,7 +37,7 @@ class Counter(commands.Cog):
             await client.db.execute("UPDATE cooldowns SET income_collected = $1 WHERE userid = $2", time.time(), user.id)
             await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2", balance+total_income, user.id)
 
-            counter_embed.description = f"You have successfully collected :coin: *${total_income:,}* of income."
+            counter_embed.description = f"You have successfully collected ***${total_income:,}*** of income."
         else:
             counter_embed.color = discord.Color.red()
             counter_embed.description = f"**{user.name}**, Your counter seems empty! Come back later..."
