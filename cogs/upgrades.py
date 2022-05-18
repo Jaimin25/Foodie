@@ -185,7 +185,7 @@ class Upgrades(commands.Cog):
                                                 value=f":exclamation: **{interaction.user.name}**, Amount must be greater than 0.")
                         return success_embed
                     else:
-                        buff = int(upg[x]["buff"]) * int(amount+amt)
+                        buff = buff * int(amount+amt)
 
                     if amount > max_upgrades:
                         success_embed.add_field(name=f"{item.name}",
