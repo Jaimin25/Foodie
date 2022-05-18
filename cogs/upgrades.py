@@ -1,82 +1,69 @@
-from typing import List, Union, Optional
-
 import discord
+from discord.ext import commands
 from discord.ui import Button, View, Select
-from discord.ext import commands, tasks
 from discord import app_commands
-from cogs import PersistentView, profile, helper
-import random
+from cogs import helper, accounts, profile
+import time, datetime
+from datetime import timedelta
 from discord.app_commands import Choice
+
 
 class Upgrades(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-
-    async def upgrades_btn_callback(self, interaction):
-
-        profile_embed = discord.Embed(title="Upgrades", color=0xfee3a8)
-        profile_embed.set_author(name=interaction.user.name)
-        profile_embed.add_field(name=":one: Kitchen", value="Upgrade kitchen stuff", inline=False)
-        profile_embed.add_field(name=":two: Staff", value="Hire new staffs", inline=False)
-        profile_embed.add_field(name=":three: Farm", value="Upgrade/Buy farm equipments", inline=False)
-
-        v = PersistentView.UpgradesPersistentView()
-        v.clear_items()
-        v.add_item(v.kitchen_upgrade_btn)
-        v.add_item(v.staff_upgrade_btn)
-        v.add_item(v.farm_upgrade_btn)
-        v.add_item(v.back_btn)
-
-        await interaction.response.edit_message(embed=profile_embed, view=v)
-
-    @app_commands.command(description="View your upgrade")
+    @app_commands.command(description="Check your upgrades")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 10.0, key=lambda i: (i.guild_id, i.user.id))
-    async def upgrade(self, interaction):
-        profile_embed = discord.Embed(title="Upgrades", color=0xfee3a8)
-        profile_embed.set_author(name=interaction.user.name)
-        profile_embed.add_field(name=":one: Kitchen", value="Upgrade kitchen stuff", inline=False)
-        profile_embed.add_field(name=":two: Staff", value="Hire new staffs", inline=False)
-        profile_embed.add_field(name=":three: Farm", value="Upgrade/Buy farm equipments", inline=False)
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    async def upgrades(self, interaction: discord.Interaction):
+        client = interaction.client
+        user = interaction.client
 
-        v = PersistentView.UpgradesPersistentView()
-        v.clear_items()
-        v.add_item(v.kitchen_upgrade_btn)
-        v.add_item(v.staff_upgrade_btn)
-        v.add_item(v.farm_upgrade_btn)
-        v.add_item(v.back_btn)
+        profile_data = await profile.Profile.get_user_details(self, interaction)
 
-        await interaction.response.send_message(embed=profile_embed, view=v)
+        btn_one = Button(emoji="1️⃣")
+        btn_two = Button(emoji="2️⃣")
 
-    async def kitchen_upgrade_btn_callback(self, interaction):
-        await Upgrades.refresh_embed_view(self, interaction, "kitchen", "edit")
+        upg_view = View()
+        upg_view.add_item(btn_one)
+        upg_view.add_item(btn_two)
 
-    async def staff_upgrade_btn_callback(self, interaction):
-        await Upgrades.refresh_embed_view(self, interaction, "staff", "edit")
+        upgrades_embed = discord.Embed(title="Upgrades", color=client.embed_color)
+        upgrades_embed.set_author(name=interaction.user.name)
+        upgrades_embed.add_field(name=":one: Kitchen", value="Upgrade kitchen stuff", inline=False)
+        upgrades_embed.add_field(name=":two: Staff", value="Hire new staffs", inline=False)
 
-    async def farm_upgrade_btn_callback(self, interaction):
+        async def kitchen_upgrade_btn_callback(interaction: discord.Interaction):
+            await self.refresh_embed_view(interaction, "kitchen", upg_view, "edit")
 
-        await Upgrades.refresh_embed_view(self, interaction, "farm", "edit")
+        btn_one.callback = kitchen_upgrade_btn_callback
 
-    async def refresh_embed_view(self, interaction, type, t=None):
-        v = PersistentView.UpgradesPersistentView()
-        v.back_btn.row = 1
-        v.clear_items()
+        async def staff_upgrade_btn_callback(interaction: discord.Interaction):
+            await self.refresh_embed_view(interaction, "staff", upg_view, "edit")
+
+        btn_two.callback = staff_upgrade_btn_callback
+
+        await interaction.response.send_message(embed=upgrades_embed, view=upg_view)
+
+    async def refresh_embed_view(self, interaction, type, v: View, t=None):
+
         upg_embed = discord.Embed(title=type.capitalize(), color=0xfee3a8)
         upg_embed.set_author(name=interaction.user.name)
         user = interaction.user
 
+        profile_date = await profile.Profile.get_user_details(self, interaction)
+
+        income = profile_date[3]
+        balance = profile_date[2]
+
         if type == "kitchen":
             upg = await helper.kitchen_upgrade()
+            v.children[0].disabled = True
+            v.children[1].disabled = False
         elif type == "staff":
             upg = await helper.staff_upgrade()
-        else:
-            upg = await helper.farm_upgrade()
-
-            max_storage = 0
-
-        v.add_item(v.back_btn)
+            v.children[0].disabled = False
+            v.children[1].disabled = True
 
         max_buff = 0.000
         current_buff = 0.000
@@ -95,259 +82,144 @@ class Upgrades(commands.Cog):
             buff = upg[x]['buff']
 
             sum = Upgrades.summa(self, int(max_upg), int(cost))
-            n = n + sum
-
+            n = n+sum
             amount = 0
             c = cost
             bufff = buff
 
             if len(upg_data) > 0 and str(upg_data[0]['name']).lower() == x.lower():
                 amount = upg_data[0]['amount']
-                c = int(c)+(int(amount)*250)
+                c = int(c) + (int(amount) * int(c))
                 bufff = round(float(bufff) + (float(bufff) * float(amount)), 3)
-
-            if type == "farm":
-
-                    if x != "storage":
-                        max_buff = max_buff + float(max_upg) * float(buff)
-                        current_buff = current_buff + float(bufff)
-
-                        upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
-                                              value=f"Cost: ${int(c):,}\nBuff: +{buff}", inline=False)
-                    else:
-                        max_storage = max_storage + float(max_upg) * float(buff)
-                        upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
-                                            value=f"Cost: ${int(c):,}\nSpace: +{buff}", inline=False)
-                    upg_embed.set_footer(
-                    text=f"Current Production Buff: +{round(current_buff, 3)}\nMax Production Buff: +{max_buff}\nMax Storage Space: {int(max_storage):,}\nMax Cost: ${n:,}")
-
             else:
+                bufff = 0
 
-                max_buff = max_buff + float(max_upg) * float(buff)
-                current_buff = current_buff + float(bufff)
+            max_buff = max_buff + float(max_upg) * float(buff)
+            current_buff = current_buff + float(bufff)
 
-                upg_embed.add_field(name=f"{name} - {amount}/{max_upg}",
-                                            value=f"Cost: ${int(c):,}\nBuff: +{bufff}", inline=False)
+            upg_embed.add_field(name=f"__{name}__ - `{amount}/{max_upg}`",
+                                    value=f"Cost: ${int(c):,}\nIncome: +${buff}/min\nID: `{x.lower()}`", inline=False)
 
-                upg_embed.set_footer(text=f"Current Buff: +{round(current_buff, 3)}\nMax Buff: +{round(max_buff, 3)}\nMax Cost: ${n:,}")
+            upg_embed.set_footer(text=f"💵 Income: ${income:,}/min\n💰 Balance: ${balance:,}")
 
         if t is not None:
             if t == "edit":
                 await interaction.response.edit_message(embed=upg_embed, view=v)
-            elif t == "send":
-                await interaction.response.send_message(embed=upg_embed, view=v)
-        else:
-            await interaction.response.edit_message(embed=upg_embed, view=v)
 
     def summa(self, max_upg, cost):
         c=0
         sum = 0
-        while max_upg:
-            if c >= int(max_upg):
-                break
-            c += 1
-            n = int(cost)
-            n = n + int(c) * 250
-            sum = sum + n
+
+        sum = max_upg*cost
+
         return sum
 
-
-
-    @app_commands.command(description="Buy Kitchen Items")
+    @app_commands.command(description="Check your upgrades")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.describe(
+        amount='Amount of items you want to buy',
+        item='Item to buy'
+    )
     @app_commands.choices(item=[
         Choice(name='Stove', value=1),
-        Choice(name='Oven', value=2),
-        Choice(name='Microwave', value=3),
-        Choice(name='Dishwasher', value=4),
-        Choice(name='Utensils', value=5)
+        Choice(name='Utensils', value=2),
+        Choice(name='Oven', value=3),
+        Choice(name='Microwave', value=4),
+        Choice(name='Dishwasher', value=5)
     ])
-    async def kitchenbuy(self, interaction, item: Choice[int]) -> None:
-        account = await profile.Profile.check_for_account(self, interaction)
+    async def buy(self, interaction: discord.Interaction, item: Choice[int], amount: int):
+        success_embed = await self.refresh_upg_embed(interaction, item, "kitchen", amount)
+        await interaction.response.send_message(embed=success_embed)
 
-        if account[0] is False:
-            em = account[1]
-            v = account[2]
-
-            await interaction.response.send_message(embed=em, view=v)
-
-        v = View()
-        buy_btn = Button()
-        buy_btn.label = "Buy"
-        buy_btn.style = discord.ButtonStyle.blurple
-
-        v.add_item(buy_btn)
-
-        success_embed = await self.refresh_upg_embed(interaction, item, "kitchen")
-
-        await interaction.response.send_message(embed=success_embed, view=v)
-
-        async def buy_button_callback(interaction: discord.Interaction):
-            success_embed = await self.refresh_upg_embed(interaction, item, "kitchen")
-            await interaction.response.edit_message(embed=success_embed, view=v)
-
-        buy_btn.callback = buy_button_callback
-
-    @app_commands.command(description="Hire Staff")
+    @app_commands.command(description="Check your upgrades")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.describe(
+        amount='Amount of staff you want to hire',
+        item='Staff to hire'
+    )
     @app_commands.choices(item=[
-        Choice(name='Manager', value=1),
-        Choice(name='Waiter', value=2),
+        Choice(name='Waiter', value=1),
+        Choice(name='Busperson', value=2),
         Choice(name='Cheff', value=3),
         Choice(name='Cook', value=4),
-        Choice(name='Busperson', value=5),
-        Choice(name='Receptionist', value=6)
+        Choice(name='Receptionist', value=5),
+        Choice(name='Manager', value=6)
     ])
-    async def staffhire(self, interaction, item: Choice[int]) -> None:
-        account = await profile.Profile.check_for_account(self, interaction)
+    async def hire(self, interaction: discord.Interaction, item: Choice[int], amount: int):
+        success_embed = await self.refresh_upg_embed(interaction, item, "staff", amount)
+        await interaction.response.send_message(embed=success_embed)
 
-        if account[0] is False:
-            em = account[1]
-            v = account[2]
-
-            await interaction.response.send_message(embed=em, view=v)
-
-        v = View()
-        hire_btn = Button()
-        hire_btn.label = "Hire"
-        hire_btn.style = discord.ButtonStyle.blurple
-
-        v.add_item(hire_btn)
-
-        success_embed = await self.refresh_upg_embed(interaction, item, "staff")
-
-        await interaction.response.send_message(embed=success_embed, view=v)
-
-        async def hire_button_callback(interaction: discord.Interaction):
-            success_embed = await self.refresh_upg_embed(interaction, item, "staff")
-            await interaction.response.edit_message(embed=success_embed, view=v)
-
-        hire_btn.callback = hire_button_callback
-
-    @app_commands.command(description="Buy Kitchen Items")
-    @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
-    @app_commands.choices(item=[
-        Choice(name='Farmland', value=1),
-        Choice(name='Machines', value=2),
-        Choice(name='Storage', value=3),
-        Choice(name='Fertilizers', value=4),
-        Choice(name='Seed', value=5)
-    ])
-    async def farmbuy(self, interaction, item: Choice[int]) -> None:
-        account = await profile.Profile.check_for_account(self, interaction)
-
-        if account[0] is False:
-            em = account[1]
-            v = account[2]
-
-            await interaction.response.send_message(embed=em, view=v)
-
-        v = View()
-        buy_btn = Button()
-        buy_btn.label = "Buy"
-        buy_btn.style = discord.ButtonStyle.blurple
-
-        v.add_item(buy_btn)
-
-        success_embed = await self.refresh_upg_embed(interaction, item, "farm")
-
-        await interaction.response.send_message(embed=success_embed, view=v)
-
-        async def buy_button_callback(interaction: discord.Interaction):
-            success_embed = await self.refresh_upg_embed(interaction, item, "farm")
-            await interaction.response.edit_message(embed=success_embed, view=v)
-
-        buy_btn.callback = buy_button_callback
-
-    async def refresh_upg_embed(self, interaction, item, type):
+    async def refresh_upg_embed(self, interaction, item, type, amt):
 
             if item is not None:
                 if type == "kitchen":
                     upg = await helper.kitchen_upgrade()
                 elif type == "staff":
                     upg = await helper.staff_upgrade()
-                else:
-                    upg = await helper.farm_upgrade()
 
                 user = interaction.user
                 upg_data = await self.client.db.fetchrow("SELECT * FROM upgrades WHERE userid = $1 AND name = $2", user.id,
                                                          item.name)
                 user_data = await profile.Profile.get_user_details(self, interaction)
 
-                farm_data = await interaction.client.db.fetchrow("SELECT * FROM farm WHERE userid = $1", user.id)
-                storage_space = 10000 if farm_data is None else farm_data[2]
-
                 bal = int(user_data[2])
-                current_buff = user_data[9]
-
-                current_rate = 2 if farm_data is None else farm_data[1]
+                income = int(user_data[3])
 
                 amount = 0 if upg_data is None else upg_data[3]
-                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff" if type == "staff" else "Farm", color=0xfee3a8)
+
+                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff", color=interaction.client.embed_color)
+
                 for x in upg:
                     if x == item.name.lower():
-
-                        cost = int(upg[x]["cost"]) + int(amount * 250)
+                        cost = int(upg[x]["cost"]) * int(amount+amt)
                         max_upgrades = int(upg[x]["max_upgrades"])
-                        buff = upg[x]["buff"]
+                        buff = int(upg[x]["buff"])*int(amount+amt)
 
                 if amount < max_upgrades:
+                    amount = amount + amt
+
+                    if amt == 0:
+                        success_embed.add_field(name=f"{item.name}",
+                                                value=f":exclamation: **{interaction.user.name}**, Amount must be greater than 0.")
+                        return success_embed
+
+                    if amount > max_upgrades:
+                        success_embed.add_field(name=f"{item.name}",
+                                                value=f":exclamation: **{interaction.user.name}**, You are exceeding the maximum upgrade amount for this item.")
+                        return success_embed
+
                     if bal >= cost:
                         if upg_data is None:
                             query = "INSERT INTO upgrades(userid, type, name, amount) VALUES ($1, $2, $3, $4)"
-                            await self.client.db.execute(query, user.id, "kitchen", item.name, amount+1)
+                            await self.client.db.execute(query, user.id, type, item.name, amount)
                         else:
                             query = "UPDATE upgrades SET amount = $1 WHERE userid = $2 AND name = $3"
-                            await self.client.db.execute(query, amount+1, user.id, item.name)
+                            await self.client.db.execute(query, amount, user.id, item.name)
 
-                        if type == "farm":
-                            if farm_data is None:
-                                farm_query = "INSERT INTO farm(userid, production, storage, amount) VALUES($1, $2, $3, $4)"
-                                await interaction.client.db.execute(farm_query, user.id, 2, 10000, 10000)
 
-                            if item.name == "Storage":
-                                query = "UPDATE farm SET storage = $1 WHERE userid = $2"
-                                await self.client.db.execute(query, storage_space+5000, user.id)
-                            else:
-                                query = "UPDATE farm SET production = $1 WHERE userid = $2"
-
-                                await self.client.db.execute(query, float(current_rate)+float(buff), user.id)
-
-                            query = "UPDATE profiles SET balance = $1 WHERE userid = $2"
-                            await self.client.db.execute(query, bal - cost,
-                                                         user.id)
-                        else:
-
-                            query = "UPDATE profiles SET balance = $1, buff = $2 WHERE userid = $3"
-                            await self.client.db.execute(query, bal-cost, float(current_buff)+(float(buff)),user.id)
+                        query = "UPDATE profiles SET balance = $1, income = $2 WHERE userid = $3"
+                        await self.client.db.execute(query, bal-cost, income+int(buff),user.id)
 
                         if type == "staff":
-                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
-                                                    value=f"Succefully hired **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total multi.",
-                                                    inline=False)
-                        elif item.name == "Storage":
-                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
-                                                    value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total storage space.",
+                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount}/{max_upgrades}",
+                                                    value=f"Succefully hired **{item.name}** for **${int(cost):,}** and got **+${(int(buff)):,}** in total income.",
                                                     inline=False)
                         else:
-                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount+1}/{max_upgrades}",
-                                                value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+{round(float(buff), 3)}** in total multi.",
+                            success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount}/{max_upgrades}",
+                                                value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+${(int(buff)):,}** in total income.",
                                                 inline=False)
-                        success_embed.set_footer(text=f"Balance: {(bal-cost):,}")
+                        success_embed.set_footer(text=f"💰 Balance: {(bal-cost):,}")
 
 
                     else:
                         if type == "staff":
                             success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to hire this person.")
-                        elif type == "kitchen":
-                            success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
-                        elif type == "farm":
+                        else:
                             success_embed.add_field(name=f"{item.name}", value=f":exclamation: **{interaction.user.name}**, You do not have enough money to buy this item.")
 
-                        success_embed.set_footer(text=f"Cost: ${int(cost):,}\nBalance: ${int(bal):,}")
+                        success_embed.set_footer(text=f"💵 Cost: ${int(cost):,}\n💰 Balance: ${int(bal):,}")
                 else:
                     success_embed.add_field(name=f":white_check_mark: {item.name}",
                                             value=f"**{interaction.user.name}**, This item is already maxed!")

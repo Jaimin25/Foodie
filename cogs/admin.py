@@ -37,6 +37,11 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         await ctx.send(f"{round(self.client.latency * 1000)}ms")
 
     @commands.command()
+    async def rdmsg(self, ctx, id):
+        msg = await ctx.fetch_message(id)
+        await ctx.send(f"```{msg.embeds[0].to_dict()}```")
+
+    @commands.command()
     async def support(self, ctx):
         support_embed = discord.Embed(
             title="Support Server",
