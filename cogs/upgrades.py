@@ -169,7 +169,7 @@ class Upgrades(commands.Cog):
 
                 amount = 0 if upg_data is None else upg_data[3]
 
-                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff", color=interaction.client.embed_color)
+                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff", color=discord.Color.green)
 
                 for x in upg:
                     if x == item.name.lower():
