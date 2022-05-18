@@ -22,10 +22,10 @@ class Menu(commands.Cog):
         income = profile_date[3]
         balance = profile_date[2]
 
-        slot_2_val = "Cap: $2,500,000\nCost: $1,500,000" if income >= 1000 else ":lock: Unlocked at `$1,000/min` income"
-        slot_3_val = "Cap: $5,000,000\nCost: $2,500,000" if income >= 1000 else ":lock: Unlocked at `$2,000/min` income"
-        slot_4_val = "Cap: $7,500,000\nCost: $5,000,000" if income >= 1000 else ":lock: Unlocked at `$5,000/min` income"
-        slot_5_val = "Cap: $10,000,000\nCost: $9,000,000" if income >= 1000 else ":lock: Unlocked at `$10,000/min` income"
+        slot_2_val = "Cap: $2,500,000\nCost: $1,500,000" if income >= 1000 else ":lock: Unlocked at `$1,000/sec` income"
+        slot_3_val = "Cap: $5,000,000\nCost: $2,500,000" if income >= 1000 else ":lock: Unlocked at `$2,000/sec` income"
+        slot_4_val = "Cap: $7,500,000\nCost: $5,000,000" if income >= 1000 else ":lock: Unlocked at `$5,000/sec` income"
+        slot_5_val = "Cap: $10,000,000\nCost: $9,000,000" if income >= 1000 else ":lock: Unlocked at `$10,000/sec` income"
 
         menu_embed = discord.Embed(title="Menu Slots", color=client.embed_color)
         menu_embed.add_field(name="Slot 1", value="Cap: $1,000,000\nCost: $500,000", inline=False)

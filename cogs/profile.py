@@ -39,7 +39,7 @@ class Profile(commands.Cog):
         profile_embed.set_footer(text=f"Created {tm} ago")
         profile_embed.add_field(name="Location", value=f"{location}", inline=False)
         profile_embed.add_field(name="Prestige", value=f":crown:  {prestige}", inline=False)
-        profile_embed.add_field(name="Income", value=f":coin: ${income:,}/s", inline=False)
+        profile_embed.add_field(name="Income", value=f":coin: ${income:,}/sec", inline=False)
         profile_embed.add_field(name="Money", value=f":moneybag: ${balance:,}", inline=False)
         profile_embed.add_field(name="Clean", value=f"{clean}", inline=False)
         profile_embed.add_field(name="Tax", value=f"{tax}", inline=False)

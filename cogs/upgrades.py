@@ -98,9 +98,9 @@ class Upgrades(commands.Cog):
             current_buff = current_buff + float(bufff)
 
             upg_embed.add_field(name=f"__{name}__ - `{amount}/{max_upg}`",
-                                    value=f"Cost: ${int(c):,}\nIncome: +${buff}/s\nID: `{x.lower()}`", inline=False)
+                                    value=f"Cost: ${int(c):,}\nIncome: +${buff}/sec\nID: `{x.lower()}`", inline=False)
 
-            upg_embed.set_footer(text=f"💵 Income: ${income:,}/s\n💰 Balance: ${balance:,}")
+            upg_embed.set_footer(text=f"💵 Income: ${income:,}/sec\n💰 Balance: ${balance:,}")
 
         if t is not None:
             if t == "edit":
