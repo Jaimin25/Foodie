@@ -175,7 +175,7 @@ class Upgrades(commands.Cog):
                     if x == item.name.lower():
                         cost = int(upg[x]["cost"]) * int(amount+amt)
                         max_upgrades = int(upg[x]["max_upgrades"])
-                        buff = int(upg[x]["buff"])*int(amount+amt)
+                        buff = int(upg[x]["buff"])
 
                 if amount < max_upgrades:
                     amount = amount + amt
