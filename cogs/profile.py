@@ -26,10 +26,9 @@ class Profile(commands.Cog):
         balance = profile_data[2]
         income = profile_data[3]
         clean = ":white_check_mark: Clean" if profile_data[4] == 1 else ":bangbang: Not Clean"
-        tax = ":white_check_mark: Payed" if profile_data[5] == 1 else ":bangbang: Pending"
-        prestige = profile_data[6]
-        buff = round(profile_data[7], 2)
-        created_at = (profile_data[8])
+        prestige = profile_data[5]
+        buff = round(profile_data[6], 2)
+        created_at = (profile_data[7])
 
         tm = self.convert_timedelta(
             datetime.timedelta(seconds=time.time()-float(created_at)))
@@ -39,10 +38,9 @@ class Profile(commands.Cog):
         profile_embed.set_footer(text=f"Created {tm} ago")
         profile_embed.add_field(name="Location", value=f"{location}", inline=False)
         profile_embed.add_field(name="Prestige", value=f":crown:  {prestige}", inline=False)
-        profile_embed.add_field(name="Income", value=f":coin: ${income:,}/sec", inline=False)
-        profile_embed.add_field(name="Money", value=f":moneybag: ${balance:,}", inline=False)
+        profile_embed.add_field(name="Income", value=f":coin: ${income:,}/min", inline=False)
+        profile_embed.add_field(name="Balance", value=f":moneybag: ${balance:,}", inline=False)
         profile_embed.add_field(name="Clean", value=f"{clean}", inline=False)
-        profile_embed.add_field(name="Tax", value=f"{tax}", inline=False)
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
         await interaction.response.send_message(embed=profile_embed)
@@ -59,12 +57,11 @@ class Profile(commands.Cog):
         balance = profile_data[3]
         income = profile_data[4]
         clean = profile_data[5]
-        tax = profile_data[6]
         prestige = profile_data[7]
         buff = round(profile_data[8], 2)
         created_at = (profile_data[9])
 
-        return name, location, balance, income, clean, tax, prestige, buff, created_at
+        return name, location, balance, income, clean, prestige, buff, created_at
 
     def convert_timedelta(self, duration):
         days, seconds = duration.days, duration.seconds

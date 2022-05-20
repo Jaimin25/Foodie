@@ -29,6 +29,7 @@ class MyBot(commands.Bot):
             'cogs.profile',
             'cogs.menu',
             'cogs.upgrades',
+            'cogs.play',
             'cogs.counter',
             'jishaku'
         ]

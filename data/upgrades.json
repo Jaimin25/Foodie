@@ -1,60 +1,60 @@
 {
   "kitchen": {
     "stove": {
-      "cost": "25000",
-      "buff": "5",
+      "cost": "475",
+      "buff": "25",
       "max_upgrades": "20"
     },
     "utensils": {
-      "cost": "35000",
-      "buff": "10",
-      "max_upgrades": "40"
+      "cost": "550",
+      "buff": "30",
+      "max_upgrades": "20"
     },
     "oven": {
-      "cost": "20000",
-      "buff": "15",
+      "cost": "750",
+      "buff": "35",
       "max_upgrades": "25"
     },
     "microwave": {
-      "cost": "30000",
-      "buff": "20",
+      "cost": "1000",
+      "buff": "40",
       "max_upgrades": "20"
     },
     "dishwasher": {
-      "cost": "25000",
-      "buff": "30",
-      "max_upgrades": "30"
+      "cost": "600",
+      "buff": "45",
+      "max_upgrades": "35"
     }
   },
   "staff": {
     "waiter": {
-      "cost": "15000",
-      "buff": "20",
+      "cost": "250",
+      "buff": "30",
       "max_upgrades": "20"
     },
     "busperson": {
-      "cost": "17500",
-      "buff": "20",
+      "cost": "500",
+      "buff": "50",
       "max_upgrades": "25"
     },
     "cheff": {
-      "cost": "22500",
-      "buff": "25",
+      "cost": "300",
+      "buff": "60",
       "max_upgrades": "15"
     },
     "cook": {
-      "cost": "25000",
-      "buff": "30",
+      "cost": "750",
+      "buff": "75",
       "max_upgrades": "10"
     },
     "receptionist": {
-      "cost": "150000",
-      "buff": "100",
+      "cost": "10000",
+      "buff": "90",
       "max_upgrades": "5"
     },
     "manager": {
-      "cost": "200000",
-      "buff": "250",
+      "cost": "20000",
+      "buff": "100",
       "max_upgrades": "5"
     }
   }

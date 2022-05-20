@@ -15,9 +15,17 @@ class Upgrades(commands.Cog):
     @app_commands.command(description="Check your upgrades")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
-    async def upgrades(self, interaction: discord.Interaction):
+    @app_commands.describe(
+        page='Page number = 1, 2'
+    )
+    async def upgrades(self, interaction: discord.Interaction, page: int):
         client = interaction.client
         user = interaction.client
+
+        is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
+
+        if not is_acc_created:
+            return
 
         profile_data = await profile.Profile.get_user_details(self, interaction)
 
@@ -27,11 +35,6 @@ class Upgrades(commands.Cog):
         upg_view = View()
         upg_view.add_item(btn_one)
         upg_view.add_item(btn_two)
-
-        upgrades_embed = discord.Embed(title="Upgrades", color=client.embed_color)
-        upgrades_embed.set_author(name=interaction.user.name)
-        upgrades_embed.add_field(name=":one: Kitchen", value="Upgrade kitchen stuff", inline=False)
-        upgrades_embed.add_field(name=":two: Staff", value="Hire new staffs", inline=False)
 
         async def kitchen_upgrade_btn_callback(interaction: discord.Interaction):
             await self.refresh_embed_view(interaction, "kitchen", upg_view, "edit")
@@ -43,7 +46,11 @@ class Upgrades(commands.Cog):
 
         btn_two.callback = staff_upgrade_btn_callback
 
-        await interaction.response.send_message(embed=upgrades_embed, view=upg_view)
+        if page == 1:
+            await self.refresh_embed_view(interaction, "kitchen", upg_view, "send")
+        elif page == 2:
+            await self.refresh_embed_view(interaction, "staff", upg_view, "send")
+
 
     async def refresh_embed_view(self, interaction, type, v: View, t=None):
 
@@ -97,14 +104,21 @@ class Upgrades(commands.Cog):
             max_buff = max_buff + float(max_upg) * float(buff)
             current_buff = current_buff + float(bufff)
 
-            upg_embed.add_field(name=f"__{name}__ - `{amount}/{max_upg}`",
-                                    value=f"Cost: ${int(c):,}\nIncome: +${buff}/sec\nID: `{x.lower()}`", inline=False)
+            if int(amount) == int(max_upg):
+                upg_embed.add_field(name=f"__{name}__ - `{amount}/{max_upg}`  :white_check_mark: ",
+                                    value=f"Income: +${int(bufff)}/min\nID: `{x.lower()}`", inline=False)
+            else:
+                upg_embed.add_field(name=f"__{name}__ - `{amount}/{max_upg}`",
+                                    value=f"Cost: ${int(c):,}\nIncome: +${buff}/min\nID: `{x.lower()}`", inline=False)
 
-            upg_embed.set_footer(text=f"💵 Income: ${income:,}/sec\n💰 Balance: ${balance:,}")
+            upg_embed.set_footer(text=f"💵 Income: ${income:,}/min\n💰 Balance: ${balance:,}")
 
         if t is not None:
             if t == "edit":
                 await interaction.response.edit_message(embed=upg_embed, view=v)
+            else:
+                await interaction.response.send_message(embed=upg_embed, view=v)
+
 
     def summa(self, max_upg, cost):
         c=0
@@ -118,7 +132,7 @@ class Upgrades(commands.Cog):
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.describe(
-        amount='Amount of items you want to buy',
+        amount='Amount/Max',
         item='Item to buy'
     )
     @app_commands.choices(item=[
@@ -128,7 +142,12 @@ class Upgrades(commands.Cog):
         Choice(name='Microwave', value=4),
         Choice(name='Dishwasher', value=5)
     ])
-    async def buy(self, interaction: discord.Interaction, item: Choice[int], amount: int):
+    async def buy(self, interaction: discord.Interaction, item: Choice[int], amount: str):
+        is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
+
+        if not is_acc_created:
+            return
+
         success_embed = await self.refresh_upg_embed(interaction, item, "kitchen", amount)
         await interaction.response.send_message(embed=success_embed)
 
@@ -136,7 +155,7 @@ class Upgrades(commands.Cog):
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.describe(
-        amount='Amount of staff you want to hire',
+        amount='Amount/Max',
         item='Staff to hire'
     )
     @app_commands.choices(item=[
@@ -147,9 +166,21 @@ class Upgrades(commands.Cog):
         Choice(name='Receptionist', value=5),
         Choice(name='Manager', value=6)
     ])
-    async def hire(self, interaction: discord.Interaction, item: Choice[int], amount: int):
+    async def hire(self, interaction: discord.Interaction, item: Choice[int], amount: str):
+        is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
+
+        if not is_acc_created:
+            return
+
         success_embed = await self.refresh_upg_embed(interaction, item, "staff", amount)
         await interaction.response.send_message(embed=success_embed)
+
+    def checkInt(self, str):
+        try:
+            int(str)
+            return True
+        except ValueError:
+            return False
 
     async def refresh_upg_embed(self, interaction, item, type, amt):
 
@@ -169,13 +200,32 @@ class Upgrades(commands.Cog):
 
                 amount = 0 if upg_data is None else upg_data[3]
 
-                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff", color=discord.Color.green())
+                success_embed = discord.Embed(title="Kitchen" if type == "kitchen" else "Staff", color=discord.Colour.brand_green())
 
                 for x in upg:
                     if x == item.name.lower():
-                        cost = int(upg[x]["cost"]) * int(amount+amt)
+                        cost = int(upg[x]["cost"])
                         max_upgrades = int(upg[x]["max_upgrades"])
                         buff = int(upg[x]["buff"])
+
+                sum = 0
+                i = 0
+
+                if not self.checkInt(amt) and amt == "max":
+                    for i in range(amount, max_upgrades+1):
+                        sum = sum+(cost*(i+1))
+                        if sum >= bal:
+                            sum = sum - (cost*(i+1))
+                            break
+
+                    amt = 1 if (i - amount) == 0 else (i-amount)
+                    cost = cost * (amount+amt) if sum == 0 else sum
+
+                elif self.checkInt(amt):
+                    amt = int(amt)
+                    cost = cost * (amount+amt)
+
+                buff = buff * int(amt)
 
                 if amount < max_upgrades:
                     amount = amount + amt
@@ -184,10 +234,6 @@ class Upgrades(commands.Cog):
                         success_embed.add_field(name=f"{item.name}",
                                                 value=f":exclamation: **{interaction.user.name}**, Amount must be greater than 0.")
                         return success_embed
-                    else:
-                        print(buff)
-                        buff = buff * int(amount)
-                        
 
                     if amount > max_upgrades:
                         success_embed.add_field(name=f"{item.name}",
@@ -229,6 +275,11 @@ class Upgrades(commands.Cog):
                                             value=f"**{interaction.user.name}**, This item is already maxed!")
 
             return success_embed
+
+    @upgrades.error
+    async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
+        if isinstance(error, app_commands.CommandOnCooldown):
+            await interaction.response.send_message(str(error), ephemeral=True)
 
 async def setup(client):
     await client.add_cog(Upgrades(client))
