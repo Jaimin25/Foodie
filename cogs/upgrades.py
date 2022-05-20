@@ -260,7 +260,7 @@ class Upgrades(commands.Cog):
                             success_embed.add_field(name=f":small_orange_diamond: {item.name} - {amount}/{max_upgrades}",
                                                 value=f"Succefully bought **{item.name}** for **${int(cost):,}** and got **+${(int(buff)):,}** in total income.",
                                                 inline=False)
-                        success_embed.set_footer(text=f"💰 Balance: {(bal-cost):,}")
+                        success_embed.set_footer(text=f"💵 Income: ${(income+int(buff)):,}\n💰 Balance: ${(bal-cost):,}")
 
 
                     else:

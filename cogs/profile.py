@@ -22,11 +22,11 @@ class Profile(commands.Cog):
         profile_data = await self.get_user_details(interaction)
 
         name = profile_data[0]
-        location = ":flag_us: New York, US" if profile_data[1] == 1 else ""
         balance = profile_data[2]
         income = profile_data[3]
         clean = ":white_check_mark: Clean" if profile_data[4] == 1 else ":bangbang: Not Clean"
         prestige = profile_data[5]
+        stars = profile_data[8]
         buff = round(profile_data[6], 2)
         created_at = (profile_data[7])
 
@@ -36,11 +36,11 @@ class Profile(commands.Cog):
         profile_embed = discord.Embed(title=name, color=interaction.client.embed_color)
         profile_embed.set_thumbnail(url=interaction.user.avatar)
         profile_embed.set_footer(text=f"Created {tm} ago")
-        profile_embed.add_field(name="Location", value=f"{location}", inline=False)
-        profile_embed.add_field(name="Prestige", value=f":crown:  {prestige}", inline=False)
+        profile_embed.add_field(name="Prestige", value=f":crown: {prestige}", inline=False)
         profile_embed.add_field(name="Income", value=f":coin: ${income:,}/min", inline=False)
         profile_embed.add_field(name="Balance", value=f":moneybag: ${balance:,}", inline=False)
         profile_embed.add_field(name="Clean", value=f"{clean}", inline=False)
+        profile_embed.add_field(name="Stars", value=f":star: {stars}", inline=False)
         profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
 
         await interaction.response.send_message(embed=profile_embed)
@@ -58,10 +58,11 @@ class Profile(commands.Cog):
         income = profile_data[4]
         clean = profile_data[5]
         prestige = profile_data[7]
-        buff = round(profile_data[8], 2)
         created_at = (profile_data[9])
+        stars = (profile_data[10])
+        buff = round(float(profile_data[8])+(0.25*prestige)+(0.05*stars), 2)
 
-        return name, location, balance, income, clean, prestige, buff, created_at
+        return name, location, balance, int(round(income*buff)), clean, prestige, buff, created_at, stars
 
     def convert_timedelta(self, duration):
         days, seconds = duration.days, duration.seconds

@@ -40,10 +40,9 @@ class Play(commands.Cog):
         f4 = random.randint(1, amt_sum)
         f5 = random.randint(1, amt_sum)
 
-
         serve_embed = discord.Embed(title=f":fork_knife_plate:  Food Served", color=0xf6c112)
         serve_embed.add_field(name="Items", value=f":hamburger: {f1}x **|** :ramen: {f2}x **|** :pizza: {f3}x", inline=False)
-        serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${(int(income*float(1+(amt_sum/100)))+int(f1*2)+int(f2*3)+int(f3*4)):,}***",inline=False)
+        serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${int(int(income)+float(1+(amt_sum/100)*int(f1*2)+int(f2*3)+int(f3*4))):,}***",inline=False)
 
         await interaction.response.send_message(embed=serve_embed)
 
