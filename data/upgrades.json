@@ -55,7 +55,7 @@
     "manager": {
       "cost": "20000",
       "buff": "100",
-      "max_upgrades": "5"
+      "max_upgrades": "6"
     }
   }
 }
