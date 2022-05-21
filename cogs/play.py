@@ -90,7 +90,7 @@ class Play(commands.Cog):
         if isinstance(error, app_commands.CommandOnCooldown):
             await interaction.response.send_message(content=f"You are on a cooldown. Try again in {int(error.retry_after/60)}m", ephemeral=True)
 
-    @tip.error
+    @tips.error
     async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.CommandOnCooldown):
             await interaction.response.send_message(
