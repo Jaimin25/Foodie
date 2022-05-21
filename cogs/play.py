@@ -97,7 +97,7 @@ class Play(commands.Cog):
             await interaction.response.send_message(
                 content=f"You are on a cooldown. Try again in {self.hms(int(error.retry_after))}", ephemeral=True)
 
-    def hms(seconds):
+    def hms(self, seconds):
         m = seconds % 3600 // 60
         s = seconds % 3600 % 60
         return '{:02d}m{:02d}s'.format(m, s)
