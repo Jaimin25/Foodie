@@ -61,7 +61,7 @@ class Play(commands.Cog):
         await interaction.response.send_message("Hello from top level command!", ephemeral=True)
 
     @group.command(name="sub-command")
-    @app_commands.guilds(discord.Object(955385300513878026))    # we use the declared group to make a command.
+    # we use the declared group to make a command.
     async def my_sub_command(self, interaction: discord.Interaction) -> None:
         """ /parent sub-command """
         await interaction.response.send_message("Hello from the sub command!", ephemeral=True)
