@@ -128,7 +128,7 @@ class Upgrades(commands.Cog):
 
         return sum
 
-    @app_commands.command(description="Check your upgrades")
+    @app_commands.command(description="Buy items for kitchen upgrades")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.describe(
@@ -142,7 +142,7 @@ class Upgrades(commands.Cog):
         Choice(name='Microwave', value=4),
         Choice(name='Dishwasher', value=5)
     ])
-    async def buy(self, interaction: discord.Interaction, item: Choice[int], amount: str):
+    async def kbuy(self, interaction: discord.Interaction, item: Choice[int], amount: str):
         is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
 
         if not is_acc_created:
@@ -151,7 +151,7 @@ class Upgrades(commands.Cog):
         success_embed = await self.refresh_upg_embed(interaction, item, "kitchen", amount)
         await interaction.response.send_message(embed=success_embed)
 
-    @app_commands.command(description="Check your upgrades")
+    @app_commands.command(description="Hire employees for staff upgrades ")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.describe(
@@ -166,7 +166,7 @@ class Upgrades(commands.Cog):
         Choice(name='Receptionist', value=5),
         Choice(name='Manager', value=6)
     ])
-    async def hire(self, interaction: discord.Interaction, item: Choice[int], amount: str):
+    async def shire(self, interaction: discord.Interaction, item: Choice[int], amount: str):
         is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
 
         if not is_acc_created:

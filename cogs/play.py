@@ -12,8 +12,6 @@ class Play(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    group = app_commands.Group(name="parent", description="...")
-
     @app_commands.command(description="Serve food to your customars")
     @app_commands.guilds(discord.Object(955385300513878026))
     @app_commands.checks.cooldown(1, 2.0, key=lambda i: (i.guild_id, i.user.id))
@@ -44,27 +42,20 @@ class Play(commands.Cog):
         f2_emote = random.choice([':pretzel:', ':pancakes:', ':waffle:', ':salad:', ':tamale:'])
         f3_emote = random.choice([':shaved_ice:', ':ice_cream:', ':icecream:', ':cupcake:', ':cake:'])
 
+        star_chance_rate = random.randint(1, 25)
+
+        if star_chance_rate == 5:
+            print("star")
+
         net_serve_income = int(int(income)+float(1+(amt_sum/100)*int(f1*2)+int(f2*3)+int(f3*4)))
 
         serve_embed = discord.Embed(title=f":fork_knife_plate:  Food Served", color=0xf6c112)
         serve_embed.add_field(name="Items", value=f"{f1_emote} {f1}x **|** {f2_emote} {f2}x **|** {f3_emote} {f3}x", inline=False)
         serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${net_serve_income:,}***",inline=False)
 
-        await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2", balance+net_serve_income, user.id)
+        #await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2", balance+net_serve_income, user.id)
 
         await interaction.response.send_message(embed=serve_embed)
-
-    @app_commands.command(name="top-command")
-    @app_commands.guilds(discord.Object(955385300513878026))
-    async def my_top_command(self, interaction: discord.Interaction) -> None:
-        """ /top-command """
-        await interaction.response.send_message("Hello from top level command!", ephemeral=True)
-
-    @group.command(name="sub-command")
-    # we use the declared group to make a command.
-    async def my_sub_command(self, interaction: discord.Interaction) -> None:
-        """ /parent sub-command """
-        await interaction.response.send_message("Hello from the sub command!", ephemeral=True)
 
     @serve.error
     async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
