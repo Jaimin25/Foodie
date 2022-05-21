@@ -29,6 +29,7 @@ class Profile(commands.Cog):
         stars = profile_data[8]
         buff = round(profile_data[6], 2)
         created_at = (profile_data[7])
+        cookies = profile_data[9]
 
         tm = self.convert_timedelta(
             datetime.timedelta(seconds=time.time()-float(created_at)))
@@ -41,7 +42,7 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Balance", value=f":moneybag: ${balance:,}", inline=False)
         profile_embed.add_field(name="Clean", value=f"{clean}", inline=False)
         profile_embed.add_field(name="Stars", value=f":star: {stars}", inline=False)
-        profile_embed.add_field(name="Total Multi", value=f":bar_chart: x{buff}", inline=False)
+        profile_embed.add_field(name="Cookies", value=f":fortune_cookie: {cookies}", inline=False)
 
         await interaction.response.send_message(embed=profile_embed)
 
@@ -60,9 +61,10 @@ class Profile(commands.Cog):
         prestige = profile_data[7]
         created_at = (profile_data[9])
         stars = (profile_data[10])
-        buff = round(float(profile_data[8])+(0.25*prestige)+(0.01*stars), 2)
+        buff = (stars*5)
+        cookies = profile_data[11]
 
-        return name, location, balance, int(round(income*buff)), clean, prestige, buff, created_at, stars
+        return name, location, balance, int(round(income+buff)), clean, prestige, buff, created_at, stars, cookies
 
     def convert_timedelta(self, duration):
         days, seconds = duration.days, duration.seconds
