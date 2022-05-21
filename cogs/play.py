@@ -16,7 +16,7 @@ class Play(commands.Cog):
 
     @app_commands.command(description="Serve food to your customars")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 9.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 2.0, key=lambda i: (i.guild_id, i.user.id))
     async def serve(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user
@@ -55,11 +55,13 @@ class Play(commands.Cog):
         await interaction.response.send_message(embed=serve_embed)
 
     @app_commands.command(name="top-command")
+    @app_commands.guilds(discord.Object(955385300513878026))
     async def my_top_command(self, interaction: discord.Interaction) -> None:
         """ /top-command """
         await interaction.response.send_message("Hello from top level command!", ephemeral=True)
 
-    @group.command(name="sub-command")  # we use the declared group to make a command.
+    @group.command(name="sub-command")
+    @app_commands.guilds(discord.Object(955385300513878026))    # we use the declared group to make a command.
     async def my_sub_command(self, interaction: discord.Interaction) -> None:
         """ /parent sub-command """
         await interaction.response.send_message("Hello from the sub command!", ephemeral=True)
