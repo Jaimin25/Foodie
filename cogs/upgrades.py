@@ -6,7 +6,7 @@ from cogs import helper, accounts, profile
 import time, datetime
 from datetime import timedelta
 from discord.app_commands import Choice
-
+import random
 
 class Upgrades(commands.Cog):
     def __init__(self, client):
@@ -281,7 +281,18 @@ class Upgrades(commands.Cog):
     @upgrades.error
     async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.CommandOnCooldown):
-            await interaction.response.send_message(str(error), ephemeral=True)
+            cl_n = random.choice(
+                ['1', '130', '2', '230', '3', '330', '4', '430', '5', '530', '6', '630', '7', '730', '8', '830', '9',
+                 '930', '10', '1030', '11', '1130', '12', '1230'])
+            cd_embed = discord.Embed(title="Cooldown",
+                                     description=f":clock{cl_n}: Try again in {self.hms(int(error.retry_after))}",
+                                     color=discord.Color.brand_red())
+            await interaction.response.send_message(embed=cd_embed)
+
+    def hms(self, seconds):
+        m = seconds % 3600 // 60
+        s = seconds % 3600 % 60
+        return '{:02d}m{:02d}s'.format(m, s)
 
 async def setup(client):
     await client.add_cog(Upgrades(client))
