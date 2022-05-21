@@ -60,7 +60,7 @@ class Profile(commands.Cog):
         prestige = profile_data[7]
         created_at = (profile_data[9])
         stars = (profile_data[10])
-        buff = round(float(profile_data[8])+(0.25*prestige)+(0.05*stars), 2)
+        buff = round(float(profile_data[8])+(0.25*prestige)+(0.01*stars), 2)
 
         return name, location, balance, int(round(income*buff)), clean, prestige, buff, created_at, stars
 
