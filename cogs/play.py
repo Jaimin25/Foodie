@@ -52,7 +52,7 @@ class Play(commands.Cog):
         star_amt = random.randint(1, 5)
 
         stars = star_amt + stars
-        serve_embed.add_field(name=":star2: Review ", value=f"Your food was so tasty! You got **{star_amt}** star(s) as food review.")
+        serve_embed.add_field(name="Review ", value=f":star2: Your food was so tasty! You got **{star_amt}** star(s) as food review.")
 
         await client.db.execute("UPDATE profiles SET balance = $1, stars = $2 WHERE userid = $3", balance+net_serve_income, stars, user.id)
 
