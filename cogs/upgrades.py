@@ -197,8 +197,8 @@ class Upgrades(commands.Cog):
 
                 bal = int(user_data[2])
                 income = int(user_data[3])
-                buff = int(user_data[6])
-                income = int(income/int(buff))
+                in_buff = int(user_data[6])
+                income = int(income/int(in_buff))
 
                 amount = 0 if upg_data is None else upg_data[3]
 
