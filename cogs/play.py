@@ -14,7 +14,7 @@ class Play(commands.Cog):
 
     @app_commands.command(description="Serve food to your customars")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 2.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 300.0, key=lambda i: (i.guild_id, i.user.id))
     async def serve(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user
@@ -29,6 +29,7 @@ class Play(commands.Cog):
 
         income = user_data[3]
         balance = user_data[2]
+        stars = user_data[8]
 
         amt_sum = 0
         for i in upg_data:
@@ -48,20 +49,20 @@ class Play(commands.Cog):
         serve_embed.add_field(name="Items", value=f"{f1_emote} {f1}x **|** {f2_emote} {f2}x **|** {f3_emote} {f3}x", inline=False)
         serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${net_serve_income:,}***",inline=False)
 
-        star_chance_rate = random.randint(1, 10)
-        print(star_chance_rate)
+        star_chance_rate = random.randint(1, 15)
 
         if star_chance_rate == 5:
+            stars = stars + 1
             serve_embed.add_field(name=":star2: Review ", value="Your food was so tasty! You got **1** star as a food review.")
 
-        #await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2", balance+net_serve_income, user.id)
+        await client.db.execute("UPDATE profiles SET balance = $1, stars = $2 WHERE userid = $3", balance+net_serve_income, stars, user.id)
 
         await interaction.response.send_message(embed=serve_embed)
 
     @serve.error
     async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.CommandOnCooldown):
-            await interaction.response.send_message(str(error), ephemeral=True)
+            await interaction.response.send_message(content=f"You are on a cooldown. Try again in {round(error.retry_after/60, )}m", ephemeral=True)
 
 async def setup(client):
     await client.add_cog(Play(client))
