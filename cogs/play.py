@@ -76,12 +76,12 @@ class Play(commands.Cog):
 
         income = user_data[3]
         balance = user_data[2]
-
+        tips = int(income/4)
         tip_embed = discord.Embed(color=0xf6c112)
-        tip_embed.description = f":dollar: You have collected **${int(income/4)}** of tips!"
+        tip_embed.description = f":dollar: You have collected **${tips:,}** of tips!"
 
         await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2",
-                                balance + int(income/4), user.id)
+                                balance + tips, user.id)
 
         await interaction.response.send_message(embed=tip_embed)
 
