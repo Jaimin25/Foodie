@@ -50,11 +50,9 @@ class Play(commands.Cog):
         serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${net_serve_income:,}***",inline=False)
 
         star_amt = random.randint(1, 5)
-        star_chance_rate = random.randint(1,2)
 
-        if star_chance_rate == 2:
-            stars = star_amt + stars
-            serve_embed.add_field(name=":star2: Review ", value=f"Your food was so tasty! You got **{star_amt}** star(s) as a food review.")
+        stars = star_amt + stars
+        serve_embed.add_field(name=":star2: Review ", value=f"Your food was so tasty! You got **{star_amt}** star(s) as food review.")
 
         await client.db.execute("UPDATE profiles SET balance = $1, stars = $2 WHERE userid = $3", balance+net_serve_income, stars, user.id)
 
