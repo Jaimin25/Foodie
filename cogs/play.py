@@ -87,8 +87,8 @@ class Play(commands.Cog):
     @serve.error
     async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.CommandOnCooldown):
-
-            cd_embed = discord.Embed(title=":clock2: Cooldown", description=f"**{interaction.user.name}**, You are on a cooldown. Try again in {int(error.retry_after/60)}m", color=discord.Color.brand_red())
+            cl_n = random.choice(['1', '130', '2', '230', '3', '330', '4', '430', '5', '530', '6', '630'])
+            cd_embed = discord.Embed(title="Cooldown", description=f":clock{cl_n}: Try again in {int(error.retry_after/60)}m", color=discord.Color.brand_red())
             await interaction.response.send_message(embed=cd_embed)
 
     @tips.error
