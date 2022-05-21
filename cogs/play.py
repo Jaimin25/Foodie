@@ -42,16 +42,16 @@ class Play(commands.Cog):
         f2_emote = random.choice([':pretzel:', ':pancakes:', ':waffle:', ':salad:', ':tamale:'])
         f3_emote = random.choice([':shaved_ice:', ':ice_cream:', ':icecream:', ':cupcake:', ':cake:'])
 
-        star_chance_rate = random.randint(1, 25)
-
-        if star_chance_rate == 5:
-            print("star")
-
         net_serve_income = int(int(income)+float(1+(amt_sum/100)*int(f1*2)+int(f2*3)+int(f3*4)))
 
         serve_embed = discord.Embed(title=f":fork_knife_plate:  Food Served", color=0xf6c112)
         serve_embed.add_field(name="Items", value=f"{f1_emote} {f1}x **|** {f2_emote} {f2}x **|** {f3_emote} {f3}x", inline=False)
         serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${net_serve_income:,}***",inline=False)
+
+        star_chance_rate = random.randint(1, 25)
+
+        if star_chance_rate == 5:
+            serve_embed.add_field(name="Review", value=":star: Your food was so tasty! One of the customar(s) gave you **1** as a food review.")
 
         #await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2", balance+net_serve_income, user.id)
 
