@@ -52,7 +52,7 @@ class Play(commands.Cog):
         print(star_chance_rate)
 
         if star_chance_rate == 5:
-            serve_embed.add_field(name="Review", value=":star: Your food was so tasty! You got **1** star as a food review.")
+            serve_embed.add_field(name=":star2: Review :star2: ", value=":star: Your food was so tasty! You got **1** star as a food review.")
 
         #await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2", balance+net_serve_income, user.id)
 
