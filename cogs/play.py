@@ -48,7 +48,7 @@ class Play(commands.Cog):
         serve_embed.add_field(name="Items", value=f"{f1_emote} {f1}x **|** {f2_emote} {f2}x **|** {f3_emote} {f3}x", inline=False)
         serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${net_serve_income:,}***",inline=False)
 
-        star_chance_rate = random.randint(1, 25)
+        star_chance_rate = random.randint(1, 10)
 
         if star_chance_rate == 5:
             serve_embed.add_field(name="Review", value=":star: Your food was so tasty!\nOne of the customar(s) gave you **1** star as a food review.")
