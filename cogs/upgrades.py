@@ -196,10 +196,10 @@ class Upgrades(commands.Cog):
                 user_data = await profile.Profile.get_user_details(self, interaction)
 
                 bal = int(user_data[2])
-                income = int(user_data[3])
-                in_buff = int(user_data[6])
-                income = int(float(income)/float(in_buff))
-                print(income)
+                income = float(user_data[3])
+                in_buff = float(user_data[6])
+                income = int(income/in_buff)
+                print(income/in_buff)
 
                 amount = 0 if upg_data is None else upg_data[3]
 
