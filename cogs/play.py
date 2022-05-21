@@ -14,7 +14,7 @@ class Play(commands.Cog):
 
     @app_commands.command(description="Serve food to your customars")
     @app_commands.guilds(discord.Object(955385300513878026))
-    @app_commands.checks.cooldown(1, 300.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 240.0, key=lambda i: (i.guild_id, i.user.id))
     async def serve(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user
@@ -59,10 +59,43 @@ class Play(commands.Cog):
 
         await interaction.response.send_message(embed=serve_embed)
 
+    @app_commands.command(description="Collect tips from your customers")
+    @app_commands.guilds(discord.Object(955385300513878026))
+    @app_commands.checks.cooldown(1, 120.0, key=lambda i: (i.guild_id, i.user.id))
+    async def tips(self, interaction: discord.Interaction):
+        client = interaction.client
+        user = interaction.user
+
+        is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
+
+        if not is_acc_created:
+            return
+
+        upg_data = await client.db.fetch("SELECT * FROM upgrades WHERE userid = $1", user.id)
+        user_data = await profile.Profile.get_user_details(self, interaction)
+
+        income = user_data[3]
+        balance = user_data[2]
+
+        tip_embed = discord.Embed(color=0xf6c112)
+        tip_embed.description = f":dollar: You have collected **${int(income/4)}** of tips!"
+
+        await client.db.execute("UPDATE profiles SET balance = $1 WHERE userid = $2",
+                                balance + int(income/4), user.id)
+
+        await interaction.response.send_message(embed=tip_embed)
+
     @serve.error
     async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.CommandOnCooldown):
             await interaction.response.send_message(content=f"You are on a cooldown. Try again in {int(error.retry_after/60)}m", ephemeral=True)
+
+    @tip.error
+    async def on_test_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
+        if isinstance(error, app_commands.CommandOnCooldown):
+            await interaction.response.send_message(
+                content=f"You are on a cooldown. Try again in {int(error.retry_after / 60)}m", ephemeral=True)
+
 
 async def setup(client):
     await client.add_cog(Play(client))
