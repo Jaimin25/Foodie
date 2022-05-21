@@ -49,7 +49,7 @@ class Play(commands.Cog):
         serve_embed.add_field(name="Items", value=f"{f1_emote} {f1}x **|** {f2_emote} {f2}x **|** {f3_emote} {f3}x", inline=False)
         serve_embed.add_field(name="Income",value=f":moneybag: You have served **{f1+f2+f3}** of food items and earned ***${net_serve_income:,}***",inline=False)
 
-        star_amt = random.randint(1, 5)
+        star_amt = random.randint(1, 3)
 
         stars = star_amt + stars
         serve_embed.add_field(name="Review ", value=f":star2: Your food was so tasty! You got **{star_amt}** star(s) as food review.")
@@ -75,7 +75,7 @@ class Play(commands.Cog):
 
         income = user_data[3]
         balance = user_data[2]
-        tips = int(income/random.randint(4,8))
+        tips = int(income/random.randint(3,5))
         tip_embed = discord.Embed(color=0xf6c112)
         tip_embed.description = f":dollar: You have collected **${tips:,}** of tips!"
 
