@@ -76,7 +76,7 @@ class Play(commands.Cog):
 
         income = user_data[3]
         balance = user_data[2]
-        tips = int(income/4)
+        tips = int(income/random.randint(4,8))
         tip_embed = discord.Embed(color=0xf6c112)
         tip_embed.description = f":dollar: You have collected **${tips:,}** of tips!"
 
