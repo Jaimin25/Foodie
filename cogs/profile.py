@@ -40,9 +40,9 @@ class Profile(commands.Cog):
         profile_embed.add_field(name="Prestige", value=f":crown: {prestige}", inline=False)
         profile_embed.add_field(name="Income", value=f":coin: ${income:,}/min", inline=False)
         profile_embed.add_field(name="Balance", value=f":moneybag: ${balance:,}", inline=False)
-        profile_embed.add_field(name="Clean", value=f"{clean}", inline=False)
         profile_embed.add_field(name="Stars", value=f":star: {stars}", inline=False)
         profile_embed.add_field(name="Cookies", value=f":fortune_cookie: {cookies}", inline=False)
+        profile_embed.add_field(name="Clean", value=f"{clean}", inline=False)
 
         await interaction.response.send_message(embed=profile_embed)
 
