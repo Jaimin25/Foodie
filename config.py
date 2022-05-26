@@ -1,6 +1,6 @@
 DATABASE_CREDENTIALS = {
-    "host": "foodiedbinstance.cccd1dziip2v.eu-west-3.rds.amazonaws.com",
-    "user": "cjcreations",
+    "host": "foodieinstance.cn35g8v4ickt.us-east-2.rds.amazonaws.com",
+    "user": "foodiedb",
     "password": "Jac25123",
     "database": "postgres",
     "min_size": 2,
