@@ -53,7 +53,7 @@ class MyBot(commands.Bot):
                 if mention == client.user:
                     prefix = await client.get_prefix(message)
                     await message.channel.send(
-                        f"I am {client.user.name} Bot. My prefix is `d`, type `dhelp` to get help, have fun :wink:. ")
+                        f"I am {client.user.name} Bot. type `/help` to get help, have fun :wink:. ")
                     return
 
         if message.author.bot:
