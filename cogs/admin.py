@@ -36,28 +36,6 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     async def ping(self, ctx):
         await ctx.send(f"{round(self.client.latency * 1000)}ms")
 
-    @commands.command()
-    async def rdmsg(self, ctx, id):
-        msg = await ctx.fetch_message(id)
-        await ctx.send(f"```{msg.embeds[0].to_dict()}```")
-
-    @commands.command()
-    async def support(self, ctx):
-        support_embed = discord.Embed(
-            title="Support Server",
-            description="**[Click Here To Get Support From Official Server](https://discord.gg/DPKxWe4HW8)**",
-            color=0x8a42d0
-        )
-        await ctx.send(embed=support_embed)
-
-    @commands.command()
-    async def invite(self, ctx):
-        invite_embed = discord.Embed(
-            title="Invite Me!",
-            description="**[Click Here To Invite Me](https://discord.com/oauth2/authorize?client_id=815102986937696276&permissions=388160&scope=bot)**",
-            color=0x9b6be3)
-        await ctx.send(embed=invite_embed)
-
     @commands.is_owner()
     @commands.command()
     async def pull(self, ctx):
@@ -93,21 +71,6 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
             n.write(msg)
 
         await ctx.send(file=discord.File("cogs/dt.sql"))
-
-    @commands.is_owner()
-    @commands.command(aliases=["tsks"])
-    async def tasks(self, ctx):
-        command = "SELECT * FROM kingdom_upg_running_tasks"
-        res = await self.client.db.fetch(command)
-        headers = list(res[0].keys())
-        table = PrettyTable()
-        table.field_names = headers
-        for record in res:
-            lst = list(record)
-            table.add_row(lst)
-
-        msg = table.get_string()
-        await ctx.send(f"```sql\n{msg}\n```")
 
     @sql.error
     async def sql_error_handling(self, ctx, error):
