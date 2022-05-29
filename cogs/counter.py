@@ -29,13 +29,13 @@ class Counter(commands.Cog):
         net_income = profile_details[3]
         balance = profile_details[2]
 
-        income_collect_at = 1 if not len(get_income_cd) > 0 else int(get_income_cd[1])
+        income_collected_at = 1 if not len(get_income_cd) > 0 else int(get_income_cd[1])
         time_now = int(time.time())
-        time_spent = time_now-income_collect_at
+        time_spent = time_now-income_collected_at
 
         counter_embed = discord.Embed(title="Income", color=discord.Color.brand_green())
 
-        total_income = 100 if income_collect_at == 1 else net_income*int(time_spent/60)
+        total_income = 100 if income_collected_at == 1 else net_income*int(time_spent/60)
 
 
         await client.db.execute("UPDATE cooldowns SET income_collected = $1 WHERE userid = $2", time.time(), user.id)
@@ -60,5 +60,6 @@ class Counter(commands.Cog):
         m = seconds % 3600 // 60
         s = seconds % 3600 % 60
         return '{:02d}m{:02d}s'.format(m, s)
+
 async def setup(client):
     await client.add_cog(Counter(client))

@@ -1,5 +1,5 @@
 DATABASE_CREDENTIALS = {
-    "host": "database-1.cn35g8v4ickt.us-east-2.rds.amazonaws.com",
+    "host": "database-2.cn35g8v4ickt.us-east-2.rds.amazonaws.com",
     "user": "postgres",
     "password": "Jac25123",
     "database": "postgres",
