@@ -115,7 +115,7 @@ tree = client.tree
 async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     error = getattr(error, 'original', error)
 
-    if isinstance(error, (app_commands.MissingRequiredArgument, app_commands.BadArgument, app_commands.MissingPermissions, app_commands.CommandInvokeError)):
+    if isinstance(error, (app_commands.MissingPermissions, app_commands.CommandInvokeError)):
         embed = discord.Embed(
             title="Error Occurred",
             description=f"{error}",
