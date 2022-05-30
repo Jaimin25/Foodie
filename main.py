@@ -167,7 +167,10 @@ async def on_command_error(ctx, error):
         if error == "The global check once functions failed.":
             pass
         else:
+            channel = client.get_channel(975263468812926987)
+
             t = traceback.format_exc()
+            await channel.send(f"```py\n{t}```")
             embed = discord.Embed(
                 title="Error Occurred",
                 description=f"```py\n{t}```",
@@ -181,7 +184,6 @@ async def on_command_error(ctx, error):
             embed.add_field(
                 name="Channel Info:", value=f"{ctx.channel.name} (ID: {ctx.channel.id}", inline=False)
             embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
-            channel = client.get_channel(975263468812926987)
             await channel.send(embed=embed)
 
 
