@@ -145,6 +145,8 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
             embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
             channel = client.get_channel(975263468812926987)
             await channel.send(embed=embed)
+            t = traceback.format_exc()
+            await channel.send(f"```py\n{t}```")
 
 
 local_tz = pytz.timezone('Asia/Kolkata')
