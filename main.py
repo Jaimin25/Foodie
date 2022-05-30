@@ -109,8 +109,10 @@ async def shutdown(ctx):
     await ctx.send("Turning myself off...")
     await client.close()
 
-@client.event
-async def on_command_error(ctx, error):
+tree = client.tree
+
+@tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     error = getattr(error, 'original', error)
 
     if isinstance(error, (app_commands.MissingRequiredArgument, app_commands.BadArgument, app_commands.MissingPermissions, app_commands.CommandInvokeError)):
@@ -119,7 +121,7 @@ async def on_command_error(ctx, error):
             description=f"{error}",
             color=discord.Color.red()
         )
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
     elif isinstance(error, (app_commands.CommandNotFound)):
         return
@@ -135,11 +137,11 @@ async def on_command_error(ctx, error):
             )
 
             embed.add_field(
-                name="User Info:", value=f"{ctx.author} (ID: {ctx.author.id})", inline=False)
+                name="User Info:", value=f"{interaction.user} (ID: {interaction.user.id})", inline=False)
             embed.add_field(
-                name="Guild Info:", value=f"{ctx.guild.name} (ID: {ctx.guild.id})", inline=False)
+                name="Guild Info:", value=f"{interaction.guild.name} (ID: {interaction.guild_id})", inline=False)
             embed.add_field(
-                name="Channel Info:", value=f"{ctx.channel.name} (ID: {ctx.channel.id}", inline=False)
+                name="Channel Info:", value=f"{interaction.client.channel} (ID: {interaction.channel_id}", inline=False)
             embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
             channel = client.get_channel(975263468812926987)
             await channel.send(embed=embed)
