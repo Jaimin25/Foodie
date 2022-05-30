@@ -141,7 +141,7 @@ async def on_command_error(ctx, error):
             embed.add_field(
                 name="Channel Info:", value=f"{ctx.channel.name} (ID: {ctx.channel.id}", inline=False)
             embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
-            channel = client.get_channel(838825475073769523)
+            channel = client.get_channel(975263468812926987)
             await channel.send(embed=embed)
 
 
