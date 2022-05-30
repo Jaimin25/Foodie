@@ -141,7 +141,7 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
             embed.add_field(
                 name="Guild Info:", value=f"{interaction.guild.name} (ID: {interaction.guild_id})", inline=False)
             embed.add_field(
-                name="Channel Info:", value=f"{interaction.client.channel} (ID: {interaction.channel_id}", inline=False)
+                name="Channel Info:", value=f"{interaction.channel} (ID: {interaction.channel_id}", inline=False)
             embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
             channel = client.get_channel(975263468812926987)
             await channel.send(embed=embed)
