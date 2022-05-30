@@ -148,6 +148,43 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
             t = traceback.format_exc()
             await channel.send(f"```py\n{t}```")
 
+@client.event
+async def on_command_error(ctx, error):
+    error = getattr(error, 'original', error)
+
+    if isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument, commands.MissingPermissions, commands.CommandInvokeError)):
+        embed = discord.Embed(
+            title="Error Occurred",
+            description=f"{error}",
+            color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+
+    elif isinstance(error, (commands.CommandNotFound)):
+        return
+    else:
+
+        if error == "The global check once functions failed.":
+            pass
+        else:
+            t = traceback.format_exc()
+            embed = discord.Embed(
+                title="Error Occurred",
+                description=f"```py\n{t}```",
+                color=discord.Color.red()
+            )
+
+            embed.add_field(
+                name="User Info:", value=f"{ctx.author} (ID: {ctx.author.id})", inline=False)
+            embed.add_field(
+                name="Guild Info:", value=f"{ctx.guild.name} (ID: {ctx.guild.id})", inline=False)
+            embed.add_field(
+                name="Channel Info:", value=f"{ctx.channel.name} (ID: {ctx.channel.id}", inline=False)
+            embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
+            channel = client.get_channel(975263468812926987)
+            await channel.send(embed=embed)
+
+
 
 local_tz = pytz.timezone('Asia/Kolkata')
 
