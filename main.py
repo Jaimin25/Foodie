@@ -144,9 +144,10 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
                 name="Channel Info:", value=f"{interaction.channel} (ID: {interaction.channel_id}", inline=False)
             embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
             channel = client.get_channel(975263468812926987)
-            await channel.send(embed=embed)
             t = traceback.format_exc()
             await channel.send(f"```py\n{t}```")
+            await channel.send(embed=embed)
+
 
 @client.event
 async def on_command_error(ctx, error):
