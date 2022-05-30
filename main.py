@@ -109,6 +109,41 @@ async def shutdown(ctx):
     await ctx.send("Turning myself off...")
     await client.close()
 
+@client.event
+async def on_command_error(ctx, error):
+    error = getattr(error, 'original', error)
+
+    if isinstance(error, (app_commands.MissingRequiredArgument, app_commands.BadArgument, app_commands.MissingPermissions, app_commands.CommandInvokeError)):
+        embed = discord.Embed(
+            title="Error Occurred",
+            description=f"{error}",
+            color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+
+    elif isinstance(error, (app_commands.CommandNotFound)):
+        return
+    else:
+
+        if error == "The global check once functions failed.":
+            pass
+        else:
+            embed = discord.Embed(
+                title="Error Occurred",
+                description=f"```{error}```",
+                color=discord.Color.red()
+            )
+
+            embed.add_field(
+                name="User Info:", value=f"{ctx.author} (ID: {ctx.author.id})", inline=False)
+            embed.add_field(
+                name="Guild Info:", value=f"{ctx.guild.name} (ID: {ctx.guild.id})", inline=False)
+            embed.add_field(
+                name="Channel Info:", value=f"{ctx.channel.name} (ID: {ctx.channel.id}", inline=False)
+            embed.set_footer(text=aslocaltimestr(datetime.datetime.utcnow()))
+            channel = client.get_channel(838825475073769523)
+            await channel.send(embed=embed)
+
 
 local_tz = pytz.timezone('Asia/Kolkata')
 
