@@ -32,7 +32,8 @@ class Play(commands.Cog):
         stars = user_data[8]
 
         amt_sum = 0
-        if upg_data is not None:
+
+        if upg_data is not None and len(upg_data) > 0:
             for i in upg_data:
                 amt_sum = amt_sum+int(i['amount'])
         else:
