@@ -32,8 +32,11 @@ class Play(commands.Cog):
         stars = user_data[8]
 
         amt_sum = 0
-        for i in upg_data:
-            amt_sum = amt_sum+int(i['amount'])
+        if upg_data is not None:
+            for i in upg_data:
+                amt_sum = amt_sum+int(i['amount'])
+        else:
+            amt_sum = 5
 
         f1 = random.randint(1, amt_sum)
         f2 = random.randint(1, amt_sum)
