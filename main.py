@@ -123,7 +123,7 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
         )
         await interaction.response.send_message(embed=embed)
 
-    elif isinstance(error, (app_commands.CommandNotFound)):
+    elif isinstance(error, (app_commands.CommandNotFound, app_commands.CommandOnCooldown)):
         return
     else:
 
