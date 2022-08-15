@@ -36,7 +36,7 @@ class Profile(commands.Cog):
 
         profile_embed = discord.Embed(title=name, color=interaction.client.embed_color)
         profile_embed.set_thumbnail(url=interaction.user.avatar)
-        profile_embed.set_footer(text=f"Createddsfefefwe {tm} ago")
+        profile_embed.set_footer(text=f"Created {tm} ago")
         profile_embed.add_field(name="Prestige", value=f":crown: {prestige}", inline=False)
         profile_embed.add_field(name="Income", value=f":coin: ${income:,}/min", inline=False)
         profile_embed.add_field(name="Balance", value=f":moneybag: ${balance:,}", inline=False)
