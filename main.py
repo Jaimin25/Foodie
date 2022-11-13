@@ -42,7 +42,7 @@ class MyBot(commands.Bot):
 
     async def on_message(self, message):
         if message.content == "sync":
-            await self.tree.sync(guild=discord.Object(955385300513878026))
+            await self.tree.sync()
             print("synced")
 
         if message.guild is None:
