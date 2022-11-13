@@ -62,7 +62,7 @@ class Play(commands.Cog):
         await interaction.response.send_message(embed=serve_embed)
 
     @app_commands.command(description="Collect tips from your customers")
-    @app_commands.checks.cooldown(1, 120.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 120.0)
     async def tips(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user
