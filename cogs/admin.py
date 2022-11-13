@@ -50,6 +50,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         return await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.is_owner()
     async def sync(self, ctx) -> None:
         fmt = await ctx.bot.tree.sync()
         await ctx.send(
