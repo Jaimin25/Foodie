@@ -41,9 +41,6 @@ class MyBot(commands.Bot):
             await self.load_extension(ext)
 
     async def on_message(self, message):
-        if message.content == "sync":
-            await self.tree.sync()
-            print("synced")
 
         if message.guild is None:
             return

@@ -49,6 +49,15 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
                               description=final)
         return await ctx.send(embed=embed)
 
+    @commands.command()
+    async def sync(self, ctx) -> None:
+        fmt = await ctx.bot.tree.sync(guild=ctx.guild)
+        await ctx.send(
+            f"Synced {len(fmt)} commands to the current guild."
+        )
+        channel = await ctx.message.author.create_dm()
+        await channel.send('hey buddy')
+
     @commands.is_owner()
     @commands.group(name="sql")
     async def sql(self, ctx, *, command):
