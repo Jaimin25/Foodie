@@ -13,7 +13,7 @@ class Upgrades(commands.Cog):
         self.client = client
 
     @app_commands.command(description="Check your upgrades")
-    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0)
     @app_commands.describe(
         page='Page number = 1, 2'
     )
@@ -128,7 +128,7 @@ class Upgrades(commands.Cog):
         return sum
 
     @app_commands.command(description="Buy items for kitchen upgrades")
-    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0)
     @app_commands.describe(
         amount='Amount/Max',
         item='Item to buy'
@@ -150,7 +150,7 @@ class Upgrades(commands.Cog):
         await interaction.response.send_message(embed=success_embed)
 
     @app_commands.command(description="Hire employees for staff upgrades ")
-    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0)
     @app_commands.describe(
         amount='Amount/Max',
         item='Staff to hire'

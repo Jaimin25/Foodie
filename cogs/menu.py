@@ -11,7 +11,7 @@ class Menu(commands.Cog):
         self.client = client
 
     @app_commands.command(description="Buy some slots for menu from here")
-    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0)
     async def menuslots(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user

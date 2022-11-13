@@ -10,7 +10,7 @@ class Accounts(commands.Cog):
         self.client = client
 
     @app_commands.command(description="Create a profile")
-    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0)
     async def start(self, interaction: discord.Interaction, name: str) -> None:
         is_acc_created = await self.check_for_account(interaction)
 

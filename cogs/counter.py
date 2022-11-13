@@ -12,7 +12,7 @@ class Counter(commands.Cog):
         self.client = client
 
     @app_commands.command(description="Collect your income")
-    @app_commands.checks.cooldown(1, 65, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 65)
     async def collect(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user

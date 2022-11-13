@@ -13,7 +13,7 @@ class Play(commands.Cog):
         self.client = client
 
     @app_commands.command(description="Serve food to your customars")
-    @app_commands.checks.cooldown(1, 240.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 240.0)
     async def serve(self, interaction: discord.Interaction):
         client = interaction.client
         user = interaction.user

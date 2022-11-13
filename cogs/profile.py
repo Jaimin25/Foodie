@@ -11,7 +11,7 @@ class Profile(commands.Cog):
         self.client = client
 
     @app_commands.command(description="View profile")
-    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.checks.cooldown(1, 5.0)
     async def profile(self, interaction: discord.Interaction):
         is_acc_created = await accounts.Accounts.check_for_account(self, interaction)
 
