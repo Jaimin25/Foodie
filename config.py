@@ -1,5 +1,5 @@
 DATABASE_CREDENTIALS = {
-    "host": "HOST-NAME",
+    "host": "HOST-AME",
     "user": "USER-NAME",
     "password": "PASSWORD",
     "database": "DATABASE-NAME",
